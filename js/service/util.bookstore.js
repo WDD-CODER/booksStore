@@ -12,3 +12,9 @@ function fromJsonToObject(json) {
 const obj = JSON.parse(json)
 return obj
 }
+
+function getId() {
+    return [...Array(8)]
+      .map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26)))
+      .join('');
+  }
