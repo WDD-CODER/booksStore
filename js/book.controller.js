@@ -2,7 +2,7 @@
 
 function onInit() {
     console.log('gBooks', gBooks);
-    
+
     render(gBooks)
 }
 function render(gBooks) {
@@ -27,14 +27,25 @@ function render(gBooks) {
 }
 
 function onRemoveBook(bookTitle) {
-    var idx =  gBooks.findIndex(book => book.title === bookTitle)
+    var idx = gBooks.findIndex(book => book.title === bookTitle)
     RemoveBook(idx)
     render(gBooks)
 }
 
-function onUpdateBook(bookPrice){
+function onUpdateBook(bookPrice) {
     var newPrice = prompt('what\'s the new price?')
-    var idx =  gBooks.findIndex(book => book.price === bookPrice)
-    updatePrice(idx,newPrice)
+    var idx = gBooks.findIndex(book => book.price === bookPrice)
+    updatePrice(idx, newPrice)
+    render(gBooks)
+}
+
+function onAddBook() {
+    const newBookName = prompt('what\'s the book\'s name?')
+    const newBookPrice = prompt('what\'s the book\'s price?') + '$'
+    const newReadyBook = {
+        title: newBookName,
+        price: newBookPrice,
+    }
+    addBook(newReadyBook)
     render(gBooks)
 }
