@@ -22,6 +22,7 @@ function render(gBooks) {
                               <button onclick="" class="read-button">read</button>
                               <button onclick="onUpdateBook('${book.price}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.title}')" class="delete-button">delete</button>   
+                              <button onclick="onShowDetails('${book.id}')" class="book-details">details</button>   
                               </td></tr>`
     })
 }
@@ -49,3 +50,19 @@ function onAddBook() {
     addBook(newReadyBook)
     render(gBooks)
 }
+
+function onShowDetails(bookId) {
+    var idx = gBooks.findIndex(book => book.id === bookId)
+    const modal = document.querySelector('.modal')
+    const pre = modal.querySelector('pre')
+    const curBook = gBooks[idx]
+    var json = fromObjectToJson(curBook)
+    pre.innerText = json
+    modal.showModal()
+}
+
+function onHideDetails() {
+    const modal = document.querySelector('.modal')
+    modal.close()
+}
+
