@@ -15,3 +15,6 @@ function getBooks(){
     gBooks.splice(idx, 1)
   }
   
+  function updatePrice(idx, newPrice){
+    gBooks[idx].price = newPrice + '$'
+  }

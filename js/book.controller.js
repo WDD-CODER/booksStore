@@ -20,7 +20,7 @@ function render(gBooks) {
                               <td>${book.price}</td>
                               <td>
                               <button onclick="" class="read-button">read</button>
-                              <button onclick="" class="update-button">update</button>
+                              <button onclick="onUpdateBook('${book.price}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.title}')" class="delete-button">delete</button>   
                               </td></tr>`
     })
@@ -29,5 +29,12 @@ function render(gBooks) {
 function onRemoveBook(bookTitle) {
     var idx =  gBooks.findIndex(book => book.title === bookTitle)
     RemoveBook(idx)
+    render(gBooks)
+}
+
+function onUpdateBook(bookPrice){
+    var newPrice = prompt('what\'s the new price?')
+    var idx =  gBooks.findIndex(book => book.price === bookPrice)
+    updatePrice(idx,newPrice)
     render(gBooks)
 }
