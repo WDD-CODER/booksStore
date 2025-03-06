@@ -11,9 +11,9 @@ function render(gBooks) {
         return
     }
 
-    const elBody = document.querySelector('body')
-    elBody.innerHTML = `<table> <tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody></table>`
-    const elTbody = document.querySelector('tbody')
+    const elTable = document.querySelector('table')
+    elTable.innerHTML = `<tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody>`
+    const elTbody = elTable.querySelector('tbody')
     gBooks.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
