@@ -1,7 +1,7 @@
 'use strict';
 
-var gBooks = ''
-getBooks()
+var gBooks = getBooks()
+
 function getBooks(){
      gBooks = [
         {title: 'blabla', price: '2$'},
