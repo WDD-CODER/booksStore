@@ -4,9 +4,9 @@ var gBooks = getBooks()
 
 function getBooks() {
   gBooks = [
-    { title: 'name1', price: '1$' },
-    { title: 'name2', price: '2$' },
-    { title: 'name3', price: '3$' }
+    {id:'1', title: 'name1', price: '1$', imgUrl:'lori-ipsi1.jpg' },
+    {id:'2', title: 'name2', price: '2$', imgUrl:'lori-ipsi2.jpg'  },
+    {id:'3', title: 'name3', price: '3$', imgUrl:'lori-ipsi3.jpg'  }
   ]
   return gBooks
 }
@@ -25,3 +25,6 @@ function addBook(newReadyBook) {
   
 }
 
+function ShowDetails(){
+  
+}
