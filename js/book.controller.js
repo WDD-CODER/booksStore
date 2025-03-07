@@ -8,10 +8,10 @@ function onInit() {
 function render(gFiltered) {
     if (!gFiltered) {
         console.log('no user input');
-        if (!gBooks) {
-            gBooks = getBooks()
-        }
-        gFiltered = gBooks
+        // if (!gBooks) {
+        //     gBooks = getBooks()
+        // }
+        gFiltered = getBooks()
     }
 
     const elTable = document.querySelector('table')
@@ -81,4 +81,9 @@ function onUserInput(event) {
     var readyToUseInput = usrInput.toLowerCase()
     gFiltered = gBooks.filter(book => book.title.includes(`${readyToUseInput}`))
     render(gFiltered)
+}
+
+function onClearSearch(){
+    document.querySelector('input').value = ''
+    render(gBooks)
 }
