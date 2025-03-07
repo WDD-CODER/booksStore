@@ -1,8 +1,7 @@
 'use strict';
 
 function onInit() {
-    console.log('gBooks', gBooks);
-
+    setBookToLocalStorage()
     render(gBooks)
 }
 function render(gBooks) {
