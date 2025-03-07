@@ -28,6 +28,6 @@ function addBook(newReadyBook) {
 }
 
 function ShowDetails(imgUrl) {
-  document.querySelector('.modal').style.backgroundImage = `url('${imgUrl}')`
+  document.querySelector('.modal img').src = imgUrl
 
 }
