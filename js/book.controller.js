@@ -1,19 +1,23 @@
 'use strict';
+var gFiltered = '';
 
 function onInit() {
     setBookToLocalStorage()
-    render(gBooks)
+    render(gFiltered)
 }
-function render(gBooks) {
-    if (!gBooks) {
-        console.log('empty');
-        return
+function render(gFiltered) {
+    if (!gFiltered) {
+        console.log('no user input');
+        if (!gBooks) {
+            gBooks = getBooks()
+        }
+        gFiltered = gBooks
     }
 
     const elTable = document.querySelector('table')
     elTable.innerHTML = `<tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody>`
     const elTbody = elTable.querySelector('tbody')
-    gBooks.map(book => {
+    gFiltered.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
@@ -27,7 +31,7 @@ function render(gBooks) {
 }
 
 function onRemoveBook(bookId) {
-    
+
     var idx = gBooks.findIndex(book => book.id === bookId)
     RemoveBook(idx)
     RemoveBookFromStorage(bookId)
@@ -44,15 +48,19 @@ function onUpdateBook(bookPrice) {
 function onAddBook() {
     const newBookName = prompt('what\'s the book\'s name?')
     const newBookPrice = prompt('what\'s the book\'s price?') + '$'
+    var newBookImgUrl = prompt('what\'s the image\'s url?') 
+    if (!newBookImgUrl|| newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
     const newReadyBook = {
+        id: getId(),
         title: newBookName,
         price: newBookPrice,
+        imgUrl: newBookImgUrl,
     }
     addBook(newReadyBook)
     render(gBooks)
 }
 
-function onShowDetails(bookId,bookImgUrl) {
+function onShowDetails(bookId, bookImgUrl) {
     var idx = gBooks.findIndex(book => book.id === bookId)
     const modal = document.querySelector('.modal')
     const pre = modal.querySelector('pre')
@@ -68,3 +76,9 @@ function onHideDetails() {
     modal.close()
 }
 
+function onUserInput(event) {
+    var usrInput = event.target.value
+    var readyToUseInput = usrInput.toLowerCase()
+    gFiltered = gBooks.filter(book => book.title.includes(`${readyToUseInput}`))
+    render(gFiltered)
+}
