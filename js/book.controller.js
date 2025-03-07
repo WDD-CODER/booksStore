@@ -8,9 +8,6 @@ function onInit() {
 function render(gFiltered) {
     if (!gFiltered) {
         console.log('no user input');
-        // if (!gBooks) {
-        //     gBooks = getBooks()
-        // }
         gFiltered = getBooks()
     }
 
@@ -31,8 +28,8 @@ function render(gFiltered) {
 }
 
 function onRemoveBook(bookId) {
-
     var idx = gBooks.findIndex(book => book.id === bookId)
+    onSuccess()
     RemoveBook(idx)
     RemoveBookFromStorage(bookId)
     render(gBooks)
@@ -41,6 +38,7 @@ function onRemoveBook(bookId) {
 function onUpdateBook(bookPrice) {
     var newPrice = prompt('what\'s the new price?')
     var idx = gBooks.findIndex(book => book.price === bookPrice)
+    onSuccess()
     updatePrice(idx, newPrice)
     render(gBooks)
 }
@@ -48,14 +46,15 @@ function onUpdateBook(bookPrice) {
 function onAddBook() {
     const newBookName = prompt('what\'s the book\'s name?')
     const newBookPrice = prompt('what\'s the book\'s price?') + '$'
-    var newBookImgUrl = prompt('what\'s the image\'s url?') 
-    if (!newBookImgUrl|| newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
+    var newBookImgUrl = prompt('what\'s the image\'s url?')
+    if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
     const newReadyBook = {
         id: getId(),
         title: newBookName,
         price: newBookPrice,
         imgUrl: newBookImgUrl,
     }
+    onSuccess()
     addBook(newReadyBook)
     render(gBooks)
 }
@@ -72,8 +71,7 @@ function onShowDetails(bookId, bookImgUrl) {
 }
 
 function onHideDetails() {
-    const modal = document.querySelector('.modal')
-    modal.close()
+    document.querySelector('.modal').close()
 }
 
 function onUserInput(event) {
@@ -83,7 +81,14 @@ function onUserInput(event) {
     render(gFiltered)
 }
 
-function onClearSearch(){
+function onClearSearch() {
     document.querySelector('input').value = ''
     render(gBooks)
+}
+
+function onSuccess() {
+    document.querySelector('.success').style.display = 'block'
+    setTimeout(() => {
+        document.querySelector('.success').style.display = 'none'
+    }, 2000);
 }
