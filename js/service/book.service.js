@@ -23,11 +23,10 @@ function updatePrice(idx, newPrice) {
 }
 
 function addBook(newReadyBook) {
-  gBooks.unshift(newReadyBook)
-  console.log('gBooks', gBooks);
-  
+  gBooks.unshift(newReadyBook)  
 }
 
-function ShowDetails(){
-  
+function ShowDetails(imgUrl){
+  document.querySelector('.modal').style.backgroundImage = `url('${imgUrl}')`
+
 }
