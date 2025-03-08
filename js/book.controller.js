@@ -88,7 +88,7 @@ function onAddBook() {
         imgUrl: newBookImgUrl,
     }
     onSuccess()
-    addBook(newReadyBook)
+    addBookToGBooks(newReadyBook)
     render(gBooks)
 }
 
