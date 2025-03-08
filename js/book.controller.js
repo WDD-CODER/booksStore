@@ -2,8 +2,8 @@
 var gFiltered = '';
 
 function onInit() {
-    setBookToLocalStorage()
-    render(gFiltered)
+    getBooksFromLocalStorage()
+    render(gBooks)
 }
 function render(gFiltered) {
     if (!gFiltered) {
