@@ -30,7 +30,7 @@ function render(booksArray) {
 
 function onRemoveBook(bookId) {
     var idx = gBooks.findIndex(book => book.id === bookId)
-    onSuccess()
+    _onSuccess()
     RemoveBook(idx)
     render(gBooks)
 }
@@ -50,7 +50,7 @@ function onUpdateBook(bookPrice) {
     }
 
     var idx = gBooks.findIndex(book => book.price === bookPrice)
-    onSuccess()
+    _onSuccess()
     updatePrice(idx, newBookPrice)
     render(gBooks)
 }
@@ -84,7 +84,7 @@ function onAddBook() {
         price: newBookPrice,
         imgUrl: newBookImgUrl,
     }
-    onSuccess()
+    _onSuccess()
     addBookToGBooks(newReadyBook)
     render(gBooks)
 }
@@ -116,7 +116,7 @@ function onClearSearch() {
     render(gBooks)
 }
 
-function onSuccess() {
+function _onSuccess() {
     document.querySelector('.success').style.display = 'block'
     setTimeout(() => {
         document.querySelector('.success').style.display = 'none'
