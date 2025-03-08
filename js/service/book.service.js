@@ -17,15 +17,17 @@ function getBooks() {
 
 function RemoveBook(idx) {
   gBooks.splice(idx, 1)
+  updateLocalStorage()
 }
 
 function updatePrice(idx, newPrice) {
   gBooks[idx].price = newPrice + '$'
+  updateLocalStorage()
 }
 
 function addBookToGBooks(newReadyBook) {
   gBooks.unshift(newReadyBook)
-  addBooksToLocalStorage()
+  updateLocalStorage()
 }
 
 function ShowDetails(imgUrl) {

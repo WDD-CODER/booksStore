@@ -32,7 +32,6 @@ function onRemoveBook(bookId) {
     var idx = gBooks.findIndex(book => book.id === bookId)
     onSuccess()
     RemoveBook(idx)
-    RemoveBookFromStorage(bookId)
     render(gBooks)
 }
 
@@ -76,7 +75,7 @@ function onAddBook() {
         }
     }
     newBookPrice += ' $'
-    
+
     var newBookImgUrl = prompt('what\'s the image\'s url?')
     if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
     const newReadyBook = {

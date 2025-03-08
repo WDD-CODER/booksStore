@@ -3,7 +3,7 @@
 function getBooksFromLocalStorage() {
     if (localStorage.length < 1) {
         getBooks()
-        addBooksToLocalStorage()
+        updateLocalStorage()
         return
     }
 
@@ -18,7 +18,7 @@ function getBooksFromLocalStorage() {
     }
 }
 
-function addBooksToLocalStorage() {
+function updateLocalStorage() {
     localStorage.clear()
     _saveBook() //, json)
 }
@@ -27,11 +27,7 @@ function addBooksToLocalStorage() {
 function _saveBook() {
     gBooks.forEach(book => {
         var json = fromObjectToJson(book, null, 4)
-        // _saveBook(book, json)
         localStorage.setItem(`${book.id}`, json)
     });
 
-}
-function RemoveBookFromStorage(bookId) {
-    localStorage.removeItem(`${bookId}`)
 }
