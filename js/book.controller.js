@@ -52,7 +52,7 @@ function onUpdateBook(bookPrice) {
 
     var idx = gBooks.findIndex(book => book.price === bookPrice)
     onSuccess()
-    updatePrice(idx, newPrice)
+    updatePrice(idx, newBookPrice)
     render(gBooks)
 }
 
