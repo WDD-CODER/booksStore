@@ -107,7 +107,7 @@ function onHideDetails() {
 function onUserInput(event) {
     var usrInput = event.target.value
     var readyToUseInput = usrInput.toLowerCase()
-    gFiltered = gBooks.filter(book => book.title.includes(`${readyToUseInput}`))
+    gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
     render(gFiltered)
 }
 
