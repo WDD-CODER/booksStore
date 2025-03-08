@@ -5,10 +5,11 @@ function onInit() {
     getBooksFromLocalStorage()
     render(gBooks)
 }
-function render(gFiltered) {
-    if (!gFiltered) {
-        console.log('no user input');
-        gFiltered = getBooks()
+
+function render(booksArray) {
+    if (!booksArray) {
+        console.log('empty booksArray');
+        booksArray = getBooks()
     }
 
     const elTable = document.querySelector('table')
