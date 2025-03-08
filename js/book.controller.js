@@ -37,7 +37,19 @@ function onRemoveBook(bookId) {
 }
 
 function onUpdateBook(bookPrice) {
-    var newPrice = prompt('what\'s the new price?')
+    var newBookPrice = prompt('what\'s the new book\'s price?')
+    while (newBookPrice.trim() === '') {
+        newBookPrice = prompt('book must have a price! please set it or hit cancel to exit')
+        if (newBookPrice === null) return
+    }
+
+    if (isNaN(newBookPrice)) {
+        while (isNaN(newBookPrice) || newBookPrice.trim() === '') {
+            newBookPrice = prompt('price must me a number only! please set it or hit cancel to exit')
+            if (newBookPrice === null) return
+        }
+    }
+
     var idx = gBooks.findIndex(book => book.price === bookPrice)
     onSuccess()
     updatePrice(idx, newPrice)
