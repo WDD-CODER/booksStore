@@ -1,6 +1,6 @@
 'use strict';
 
-var gBooks = getBooks()
+var gBooks = [];
 
 function getBooks() {
 
@@ -23,8 +23,9 @@ function updatePrice(idx, newPrice) {
   gBooks[idx].price = newPrice + '$'
 }
 
-function addBook(newReadyBook) {
+function addBookToGBooks(newReadyBook) {
   gBooks.unshift(newReadyBook)
+  addBooksToLocalStorage()
 }
 
 function ShowDetails(imgUrl) {
