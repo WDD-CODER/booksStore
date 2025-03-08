@@ -15,7 +15,7 @@ function render(booksArray) {
     const elTable = document.querySelector('table')
     elTable.innerHTML = `<tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody>`
     const elTbody = elTable.querySelector('tbody')
-    gFiltered.map(book => {
+    booksArray.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
