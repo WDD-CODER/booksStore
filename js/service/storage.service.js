@@ -20,15 +20,17 @@ function getBooksFromLocalStorage() {
 
 function addBooksToLocalStorage() {
     localStorage.clear()
-    gBooks.forEach(book => {
-        var json = fromObjectToJson(book, null, 4)
-        _saveBook(book, json)
-    });
+    _saveBook() //, json)
 }
 
 
-function _saveBook(bookObject, json) {
-    localStorage.setItem(`${bookObject.id}`, json)
+function _saveBook() {
+    gBooks.forEach(book => {
+        var json = fromObjectToJson(book, null, 4)
+        // _saveBook(book, json)
+        localStorage.setItem(`${book.id}`, json)
+    });
+
 }
 function RemoveBookFromStorage(bookId) {
     localStorage.removeItem(`${bookId}`)
