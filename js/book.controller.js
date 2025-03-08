@@ -57,13 +57,33 @@ function onUpdateBook(bookPrice) {
 }
 
 function onAddBook() {
-    const newBookName = prompt('what\'s the book\'s name?')
-    const newBookPrice = prompt('what\'s the book\'s price?') + '$'
+    var newBookTitle = prompt('what\'s the book\'s title?')
+    while (newBookTitle.trim() === '') {
+        newBookTitle = prompt('book must have a title! please  set it or hit cancel to exit')
+        if (newBookTitle === null) return
+    }
+
+    var newBookPrice = prompt('what\'s the book\'s price?')
+    while (newBookPrice.trim() === '') {
+        newBookPrice = prompt('book must have a price! please set it or hit cancel to exit')
+        if (newBookPrice === null) return
+    }
+
+    if (isNaN(newBookPrice)) {
+        while (isNaN(newBookPrice) || newBookPrice.trim() === '') {
+            newBookPrice = prompt('price must me a number only! please set it or hit cancel to exit')
+            if (newBookPrice === null) return
+        }
+    }
+
+    newBookPrice += ' $'
+    console.log("🚀 ~ onAddBook ~ newBookPrice:", newBookPrice)
+
     var newBookImgUrl = prompt('what\'s the image\'s url?')
     if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
     const newReadyBook = {
         id: getId(),
-        title: newBookName,
+        title: newBookTitle,
         price: newBookPrice,
         imgUrl: newBookImgUrl,
     }
