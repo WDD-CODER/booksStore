@@ -10,6 +10,7 @@ function render(booksArray) {
     if (!booksArray) {
         console.log('empty booksArray');
         booksArray = getBooks()
+        getCurStats(booksArray)
     }
 
     const elTable = document.querySelector('table')
@@ -26,6 +27,7 @@ function render(booksArray) {
                               <button onclick="onShowDetails('${book.id}','${book.imgUrl}')" class="book-details">details</button>   
                               </td></tr>`
     })
+    getCurStats(booksArray)
 }
 
 function onRemoveBook(bookId) {
@@ -121,4 +123,26 @@ function _onSuccess() {
     setTimeout(() => {
         document.querySelector('.success').style.display = 'none'
     }, 2000);
+}
+
+function onFindStats(AverageBookPrice,rendedBooks,booksAbove200,booksBetween,booksBelow100) {
+
+    const elFooter = document.querySelector('footer')
+    const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
+    const spanNumOfBooks = elFooter.querySelector('.sum-of-books')
+    const spanAbove200 = elFooter.querySelector('.above-200')
+    const spanBetween = elFooter.querySelector('.between')
+    const spanBelow100 = elFooter.querySelector('.below-100')
+
+    var AveragePricePerBook = `Average Book Price : ${AverageBookPrice}`
+    var numOfBooks = `Total Book Count : ${rendedBooks.length}`
+    var Above200 = `Books above 200$ : ${booksAbove200}`
+    var Between = `Books Between 100$ and 200$ : ${booksBetween}`
+    var Below100 = `Books Below 100$ : ${booksBelow100}`  
+
+    spanNumOfBooks.innerText = numOfBooks
+    spanAveragePricePerBook.innerText = AveragePricePerBook
+    spanAbove200.innerText = Above200
+    spanBetween.innerText = Between
+    spanBelow100.innerText = Below100
 }

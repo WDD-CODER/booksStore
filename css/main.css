@@ -6,6 +6,8 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
+
+    min-height: 95vh
 }
 
 .modal {
@@ -16,7 +18,8 @@ body {
 
     background-color: antiquewhite;
 }
-.success{
+
+.success {
     display: none;
     position: center;
 
@@ -24,11 +27,25 @@ body {
     border: 1px black solid;
 
     background-color: bisque;
-    
+
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 20px;
+    font-size: 15px;
 }
 
-img{
+img {
     background-color: transparent;
+}
+
+footer {
+    display: flex;
+    
+    gap: 1rem;
+    margin-top: auto;
+    
+    border: 1px black solid;
+    background-color: rgb(202, 202, 202);
+
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 15px;
+
 }
