@@ -3,20 +3,80 @@
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    display: grid;
+    grid-template-columns: 10vw 60vw 10vw;
+    grid-template-rows: 20vh 60vh 20vh;
+    grid-template-areas:
+        ". h1 ."
+        ". main-container ."
+        ". footer .";
 
-    min-height: 95vh
+    justify-content: center;
+
+    background-color: aquamarine;
 }
 
+h1 {
+    display: flex;
+    grid-area: h1;
+
+    place-content: center;
+
+
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    grid-area: main-container;
+
+
+    align-items: center;
+
+    gap: 1rem;
+    margin: 1rem;
+
+    border: 1px black solid;
+}
+
+.table-header span {
+    margin-inline-end: 3rem;
+    border: 1px black solid;
+
+
+}
+
+
+td {
+    /* gap: 1rem; */
+    /* padding: 1rem; */
+    margin-inline-end: 3rem;
+
+    border: 1px black solid;
+}
+
+
+.table-title {
+    display: flex;
+    flex-shrink: 0;
+
+    gap: 3rem;
+}
+
+.table-title span{
+    width: 30%;
+}
 .modal {
     position: absolute;
 
-    max-width: 100vw;
-    max-height: 100vh;
+    /* max-width: 100vw;
+    max-height: 100vh; */
 
     background-color: antiquewhite;
+}
+
+.action-buttons {
+    display: flex;
 }
 
 .success {
@@ -29,7 +89,7 @@ body {
     background-color: bisque;
 
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 15px;
+    font-size: 10px;
 }
 
 img {
@@ -38,14 +98,28 @@ img {
 
 footer {
     display: flex;
-    
+    grid-area: footer;
+
+    align-items: center;
+
+    padding: 2px;
     gap: 1rem;
-    margin-top: auto;
-    
+    margin-block-start: auto;
+
     border: 1px black solid;
     background-color: rgb(202, 202, 202);
 
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 15px;
+    font-size: 10px;
 
+}
+
+.empty-notice-cell {
+    display: flex;
+    justify-content: center;
+}
+
+.empty-notice {
+    padding: 5px;
+    border: 1px black solid;
 }
