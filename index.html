@@ -9,7 +9,9 @@
 </head>
 
 <body onload="onInit()">
-    <table></table>
+    <table>
+        <tbody></tbody>
+</table>
 
 <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
 <button onclick="onClearSearch()" class="clear">clear search</button>
@@ -35,10 +37,10 @@
         <span></span>
         <span class="below-100"></span>
     </footer>
-    <script src="js/book.controller.js"></script>
-    <script src="js/service/book.service.js"></script>
     <script src="js/service/util.bookstore.js"></script>
     <script src="js/service/storage.service.js"></script>
+    <script src="js/service/book.service.js"></script>
+    <script src="js/book.controller.js"></script>
 </body>
 
 </html>
