@@ -1,28 +1,31 @@
 'use strict';
 
-var gBooks = [];
+const BOOK_KEY = 'bookDB'
+var gBooks = _createBooks()
 
 function getBooks() {
-
-  gBooks = [
-    { id: '1', title: 'drawing Tree', price: '99$', imgUrl: 'img/drawingTree.jpg' },
-    { id: '2', title: 'expiration Dates', price: '201$', imgUrl: 'img/expirationDates.jpg' },
-    { id: '3', title: 'happy Place', price: '150$', imgUrl: 'img/happyPlace.jpg' },
-    { id: '4', title: 'harry Potter', price: '110$', imgUrl: 'img/harryPotter.jpg' },
-    { id: '5', title: 'lions Gaze', price: '180$', imgUrl: 'img/lionsGaze.jpg' }
-  ]
   return gBooks
 }
 
 
-function RemoveBook(idx) {
-  gBooks.splice(idx, 1)
-  updateLocalStorage()
+function getBookById(bookId) {
+  var book = gBooks.findIndex(book => book.id === bookId)
+
+  return book
 }
 
-function updatePrice(idx, newPrice) {
-  gBooks[idx].price = newPrice + '$'
-  updateLocalStorage()
+function removeBook(bookId) {
+  var bookToRemove = gBooks.findIndex(book => book.id === bookId)
+
+  gBooks.splice(bookToRemove, 1)
+  _saveBook()
+}
+
+function updatePrice(bookId, newPrice) {
+  var book = gBooks.findIndex(book => book.id === bookId)
+book.price = newPrice + '$'
+  // gBooks[idx].price = newPrice + '$'
+  _saveBook()
 }
 
 function addBookToGBooks(newReadyBook) {
@@ -59,3 +62,26 @@ function getCurStats(rendedBooks) {
 
 return onFindStats(AverageBookPrice,rendedBooks,booksAbove200,booksBetween,booksBelow100)
 }
+
+function _createBooks() {
+  var books = loadFromStorage('bookDB') // null
+
+  if(!books || !books.length) {
+
+ books = [
+    { id: '1', title: 'drawing Tree', price: '99$', imgUrl: 'img/drawingTree.jpg' },
+    { id: '2', title: 'expiration Dates', price: '201$', imgUrl: 'img/expirationDates.jpg' },
+    { id: '3', title: 'happy Place', price: '150$', imgUrl: 'img/happyPlace.jpg' },
+    { id: '4', title: 'harry Potter', price: '110$', imgUrl: 'img/harryPotter.jpg' },
+    { id: '5', title: 'lions Gaze', price: '180$', imgUrl: 'img/lionsGaze.jpg' }
+  ]
+}
+saveToStorage(BOOK_KEY, books)
+return books
+
+}
+
+function _saveBook() {
+  saveToStorage(BOOK_KEY, gBooks)
+ 
+ }
