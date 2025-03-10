@@ -2,43 +2,49 @@
 var gFiltered = '';
 
 function onInit() {
-    getBooksFromLocalStorage()
-    render(gBooks)
+    render()
+    getBookObjectFromLocalStorage()
 }
 
-function render(booksArray) {
-    if (!booksArray) {
-        console.log('empty booksArray');
-        booksArray = getBooks()
-        getCurStats(booksArray)
-    }
+function render() {
+    // if (!booksArray) {
+        // console.log('empty booksArray');
+        const books = getBooks()
+        getCurStats(books)
+    // }
 
     const elTable = document.querySelector('table')
     elTable.innerHTML = `<tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody>`
     const elTbody = elTable.querySelector('tbody')
-    booksArray.map(book => {
+    books.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
                               <td>
                               <button onclick="" class="read-button">read</button>
-                              <button onclick="onUpdateBook('${book.price}')" class="update-button">update</button>
+                              <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
                               <button onclick="onShowDetails('${book.id}','${book.imgUrl}')" class="book-details">details</button>   
                               </td></tr>`
     })
-    getCurStats(booksArray)
+    getCurStats(books)
 }
 
 function onRemoveBook(bookId) {
-    var idx = gBooks.findIndex(book => book.id === bookId)
+    removeBook(bookId)
+    render()
     _onSuccess()
-    RemoveBook(idx)
-    render(gBooks)
 }
 
-function onUpdateBook(bookPrice) {
-    var newBookPrice = prompt('what\'s the new book\'s price?')
+function onUpdateBook(bookId) {
+    var newBookPrice = prompt('what\'s the new book\'s price?') 
+
+    // if(!newBookPrice || isNaN(newBookPrice)) {
+    //   alert('book must have a price bigger then 0! please set it or hit cancel to exit')
+    //   return
+
+    // }
+
     while (newBookPrice.trim() === '') {
         newBookPrice = prompt('book must have a price! please set it or hit cancel to exit')
         if (newBookPrice === null) return
@@ -51,10 +57,9 @@ function onUpdateBook(bookPrice) {
         }
     }
 
-    var idx = gBooks.findIndex(book => book.price === bookPrice)
-    _onSuccess()
-    updatePrice(idx, newBookPrice)
+    updatePrice(bookId, newBookPrice)
     render(gBooks)
+    _onSuccess()
 }
 
 function onAddBook() {
@@ -91,8 +96,10 @@ function onAddBook() {
     render(gBooks)
 }
 
+// debugg this func
 function onShowDetails(bookId, bookImgUrl) {
-    var idx = gBooks.findIndex(book => book.id === bookId)
+    const book = getBookById(bookId)
+    // title, price, img
     const modal = document.querySelector('.modal')
     const pre = modal.querySelector('pre')
     const curBook = gBooks[idx]
