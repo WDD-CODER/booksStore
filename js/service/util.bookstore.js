@@ -2,6 +2,13 @@
 // var test =     {id:'1', title: 'name1', price: '1$', imgUrl:'lori-ipsi1.jpg' }
 
 // fromObjectToJson(test)
+function GetClearPrice(book){
+ return  parseFloat(book.price)
+}
+
+function get2DecimalNum(num){
+  return parseFloat(num).toFixed(2)  
+}
 
 function fromObjectToJson(obj) {
 const json = JSON.stringify(obj,null,4)
