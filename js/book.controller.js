@@ -121,9 +121,9 @@ function onClearSearch() {
 }
 
 function _onSuccess() {
-    document.querySelector('.success').style.display = 'block'
+    document.querySelector('.success').classList.remove('hidden')
     setTimeout(() => {
-        document.querySelector('.success').style.display = 'none'
+        document.querySelector('.success').classList.add('hidden')
     }, 2000);
 }
 

@@ -1,12 +1,11 @@
 * {
     box-sizing: border-box;
 }
-
 body {
     display: flex;
     flex-direction: column;
     position: relative;
-
+    
     align-items: center;
     justify-content: center;
 
@@ -35,7 +34,7 @@ table {
     
     border-collapse: collapse; 
     border: 2px black solid;
-
+    
 }
 
 th,
@@ -49,9 +48,13 @@ thead {
     background-color:  rgb(190, 190, 190);
 }
 
+.hidden{
+    display: none;
+}
+
 .modal {
     position: relative;
-
+    
     max-width: 50vw;
     max-height: 50vh;
 
@@ -66,7 +69,6 @@ thead {
 }
 
 .success {
-    display: none;
     position: center;
 
     padding: 1rem;
