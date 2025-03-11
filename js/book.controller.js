@@ -24,7 +24,7 @@ function render(bookArray) {
                               <button onclick="onShowDetails('${book.id}')" class="book-details">read</button>   
                               </td></tr>`
     })
-    getCurStats(books)
+    onFindStats()
 }
 
 function onRemoveBook(bookId) {
@@ -127,8 +127,9 @@ function _onSuccess() {
     }, 2000);
 }
 
-function onFindStats(AverageBookPrice, rendedBooks, booksAbove200, booksBetween, booksBelow100) {
 
+function onFindStats() {
+    console.log("🚀 ~ onFindStats ~ curStats:", gStats)
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
     const spanNumOfBooks = elFooter.querySelector('.sum-of-books')
@@ -136,11 +137,11 @@ function onFindStats(AverageBookPrice, rendedBooks, booksAbove200, booksBetween,
     const spanBetween = elFooter.querySelector('.between')
     const spanBelow100 = elFooter.querySelector('.below-100')
 
-    var AveragePricePerBook = `Average Book Price : ${AverageBookPrice}`
-    var numOfBooks = `Total Book Count : ${rendedBooks.length}`
-    var Above200 = `Books above 200$ : ${booksAbove200}`
-    var Between = `Books Between 100$ and 200$ : ${booksBetween}`
-    var Below100 = `Books Below 100$ : ${booksBelow100}`
+    var numOfBooks = `Total Book Count : ${gStats.BooksCount}`
+    var AveragePricePerBook = `Average Book Price : ${gStats.avgPrice}`
+    var Above200 = `Books above 200$ : ${gStats.moreThen200}`
+    var Between = `Books Between 100$ and 200$ : ${gStats.Between}`
+    var Below100 = `Books Below 100$ : ${gStats.lessThen100}`
 
     spanNumOfBooks.innerText = numOfBooks
     spanAveragePricePerBook.innerText = AveragePricePerBook

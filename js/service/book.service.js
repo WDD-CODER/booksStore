@@ -2,14 +2,14 @@
 
 const BOOK_KEY = 'bookDB'
 var gBooks = _createBooks()
-
-function getBooks() {
-  return gBooks
-}
+var gStats = getCurStats()
+  function getBooks() {
+    return gBooks
+  }
 
 
 function getBookById(bookId) {
-  var book = gBooks.find(book => {return book.id === bookId})
+  var book = gBooks.find(book => { return book.id === bookId })
   return book
 }
 
@@ -29,34 +29,40 @@ function updatePrice(bookId, newPrice) {
 
 function addBookToGBooks(newReadyBook) {
   gBooks.unshift(newReadyBook)
-   _saveBook()
+  _saveBook()
 }
 
 
-function getCurStats(rendedBooks) {
+function getCurStats() {
 
-  var AverageBookPrice = rendedBooks.reduce((acc, book, idx, array) => {
+  var AverageBookPrice = gBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
     acc += clearPriceNum
     return acc
   }, 0)
-  var booksAbove200 = rendedBooks.reduce((acc, book, idx, array) => {
+  var booksAbove200 = gBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
     if (clearPriceNum > 200) acc++
     return acc
   }, 0)
-  var booksBetween = rendedBooks.reduce((acc, book, idx, array) => {
+  var booksBetween = gBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
     if (clearPriceNum > 100 && clearPriceNum < 200) acc++
     return acc
   }, 0)
-  var booksBelow100 = rendedBooks.reduce((acc, book, idx, array) => {
+  var booksBelow100 = gBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
     if (clearPriceNum < 100) acc++
     return acc
   }, 0)
 
-  return onFindStats(AverageBookPrice, rendedBooks, booksAbove200, booksBetween, booksBelow100)
+  return  {
+                   BooksCount: gBooks.length,
+                   avgPrice: AverageBookPrice,
+                   moreThen200: booksAbove200,
+                   Between: booksBetween,
+                   lessThen100: booksBelow100,
+                 }
 }
 
 function _createBooks() {
