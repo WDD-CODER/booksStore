@@ -2,18 +2,18 @@
 var gFiltered = '';
 
 function onInit() {
-    render()
-    // getBookObjectFromLocalStorage()
+    render(gBooks)
 }
 
-function render() {
-    // if (!booksArray) {
-        // console.log('empty booksArray');
+function render(bookArray) {
+    if (!bookArray || bookArray.length === 0) {
         const books = getBooks()
-        getCurStats(books)
-    // }
+    }
 
+    else
+    var books = bookArray
     const elTbody = document.querySelector('tbody')
+    elTbody.innerHTML = ''
     books.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
@@ -34,7 +34,7 @@ function onRemoveBook(bookId) {
 }
 
 function onUpdateBook(bookId) {
-    var newBookPrice = prompt('what\'s the new book\'s price?') 
+    var newBookPrice = prompt('what\'s the new book\'s price?')
 
     // if(!newBookPrice || isNaN(newBookPrice)) {
     //   alert('book must have a price bigger then 0! please set it or hit cancel to exit')
@@ -93,22 +93,17 @@ function onAddBook() {
     render(gBooks)
 }
 
-// debugg this func
 function onShowDetails(bookId) {
     const book = getBookById(bookId)
-    console.log("🚀 ~ onShowDetails ~ book:", book)
-    const randPar =  getLoremIpsum()
+    const randPars = getLoremIpsum()
     const modal = document.querySelector('.modal')
-    document.querySelector('.book-title').innerText= `book title: ${book.title}` 
-    document.querySelector('.price').innerText=`book price: ${book.price}`
-    document.querySelector('.book-pre').innerText=`book description: ${randPar}`
+    document.querySelector('.book-title').innerText = book.title
+    document.querySelector('.price').innerText = `price:  ${book.price}`
+    document.querySelector('.book-pre').innerText = `book description: ${randPars}`
     document.querySelector('.book-img').src = book.imgUrl
     modal.showModal()
 }
 
-function ShowDetails(imgUrl) {
-  }
-  
 function onHideDetails() {
     document.querySelector('.modal').close()
 }
@@ -132,7 +127,7 @@ function _onSuccess() {
     }, 2000);
 }
 
-function onFindStats(AverageBookPrice,rendedBooks,booksAbove200,booksBetween,booksBelow100) {
+function onFindStats(AverageBookPrice, rendedBooks, booksAbove200, booksBetween, booksBelow100) {
 
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
@@ -145,7 +140,7 @@ function onFindStats(AverageBookPrice,rendedBooks,booksAbove200,booksBetween,boo
     var numOfBooks = `Total Book Count : ${rendedBooks.length}`
     var Above200 = `Books above 200$ : ${booksAbove200}`
     var Between = `Books Between 100$ and 200$ : ${booksBetween}`
-    var Below100 = `Books Below 100$ : ${booksBelow100}`  
+    var Below100 = `Books Below 100$ : ${booksBelow100}`
 
     spanNumOfBooks.innerText = numOfBooks
     spanAveragePricePerBook.innerText = AveragePricePerBook
