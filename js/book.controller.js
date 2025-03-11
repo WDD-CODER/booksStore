@@ -1,23 +1,21 @@
 'use strict';
 
-var gFiltered = '';
-
 function onInit() {
-    render(gBooks)
+    render()
 }
 
-function render(bookArray) {
-    if (bookArray.length === 0){
-        renderGFiltered()
+function render() {
+    const books = getBooks()    
+    if (!books ||books.length === 0) {
+        renderNoticeNoFilter()
         return
     }
-    
-    
+
     const elNoBooksNotice = document.querySelector('.noticeNoBooks')   
     const elTbody = document.querySelector('tbody')
     elNoBooksNotice.classList.add('hidden') 
     elTbody.innerHTML = ''
-    bookArray.map(book => {
+    books.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
@@ -30,7 +28,7 @@ function render(bookArray) {
     onFindStats()
 }
 
-function renderGFiltered(){
+function renderNoticeNoFilter(){    
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     const elNoBooksNotice = document.querySelector('.noticeNoBooks')   
@@ -39,33 +37,21 @@ function renderGFiltered(){
 
 function onRemoveBook(bookId) {
     removeBook(bookId)
-    render(gBooks)
+    render()
     _onSuccess()
 }
 
 function onUpdateBook(bookId) {
     var newBookPrice = prompt('what\'s the new book\'s price?')
 
-    // if(!newBookPrice || isNaN(newBookPrice)) {
-    //   alert('book must have a price bigger then 0! please set it or hit cancel to exit')
-    //   return
+    if(!newBookPrice || isNaN(newBookPrice)) {
+      alert('book must have a price bigger then 0! please set it or hit cancel to exit')
+      return
 
-    // }
-
-    while (newBookPrice.trim() === '') {
-        newBookPrice = prompt('book must have a price! please set it or hit cancel to exit')
-        if (newBookPrice === null) return
-    }
-
-    if (isNaN(newBookPrice)) {
-        while (isNaN(newBookPrice) || newBookPrice.trim() === '') {
-            newBookPrice = prompt('price must me a number only! please set it or hit cancel to exit')
-            if (newBookPrice === null) return
-        }
     }
 
     updatePrice(bookId, newBookPrice)
-    render(gBooks)
+    render()
     _onSuccess()
 }
 
@@ -100,7 +86,7 @@ function onAddBook() {
     }
     _onSuccess()
     addBookToGBooks(newReadyBook)
-    render(gBooks)
+    render()
 }
 
 function onShowDetails(bookId) {
@@ -119,14 +105,16 @@ function onHideDetails() {
 }
 
 function onUserInput(event) {    
-    var usrInput = event.target.value
-    getUserInput(usrInput)
-    render(gFiltered)
+    var value = event.target.value
+    setFilter(value)
+    // console.log("🚀 ~ onUserInput ~ value:", value)
+    // getUserInput(usrInput)
+    render()
 }
 
 function onClearSearch() {
     document.querySelector('input').value = ''
-    render(gBooks)
+    render()
 }
 
 function _onSuccess() {

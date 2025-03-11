@@ -1,12 +1,23 @@
 'use strict';
-
 const BOOK_KEY = 'bookDB'
+
+var gFilter = ''
 var gBooks = _createBooks()
 var gStats = {}
+
+
 function getBooks() {
-  return gBooks
+  var books = gBooks.filter(
+    book => book.title.toLowerCase().includes(gFilter.toLowerCase()))
+    console.log("🚀 ~ getBooks ~ books.length:", books.length)
+  if (books.length === 0) renderNoticeNoFilter()
+  else return books
+  // }
 }
 
+function setFilter(val) {
+  gFilter = val
+}
 
 function getBookById(bookId) {
   var book = gBooks.find(book => { return book.id === bookId })
@@ -66,23 +77,23 @@ function getCurStats() {
 
   return gStats = {
     BooksCount: numOfBooks,
-    avgPrice:AveragePricePerBook,
+    avgPrice: AveragePricePerBook,
     moreThen200: Above200,
     Between: Between,
     lessThen100: Below100,
   }
-  
-}
-
-function getGFiltered(readyToUseInput){
-  gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
 
 }
 
-function getUserInput(usrInput) {    
-  var readyToUseInput = usrInput.toLowerCase()
-  getGFiltered(readyToUseInput)
-}
+// function getGFiltered(readyToUseInput){
+//   gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
+
+// }
+
+// function getUserInput(usrInput) {    
+//   var readyToUseInput = usrInput.toLowerCase()
+//   getGFiltered(readyToUseInput)
+// }
 
 function _createBooks() {
   var books = loadFromStorage('bookDB') // null
