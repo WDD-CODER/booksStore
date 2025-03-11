@@ -1,4 +1,5 @@
 'use strict';
+
 var gFiltered = '';
 
 function onInit() {
@@ -6,15 +7,17 @@ function onInit() {
 }
 
 function render(bookArray) {
-    if (!bookArray || bookArray.length === 0) {
-        const books = getBooks()
+    if (bookArray.length === 0){
+        renderGFiltered()
+        return
     }
-
-    else
-    var books = bookArray
+    
+    
+    const elNoBooksNotice = document.querySelector('.noticeNoBooks')   
     const elTbody = document.querySelector('tbody')
+    elNoBooksNotice.classList.add('hidden') 
     elTbody.innerHTML = ''
-    books.map(book => {
+    bookArray.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
@@ -25,6 +28,13 @@ function render(bookArray) {
                               </td></tr>`
     })
     onFindStats()
+}
+
+function renderGFiltered(){
+    const elTbody = document.querySelector('tbody')
+    elTbody.innerHTML = ''
+    const elNoBooksNotice = document.querySelector('.noticeNoBooks')   
+    elNoBooksNotice.classList.remove('hidden') 
 }
 
 function onRemoveBook(bookId) {
@@ -108,12 +118,9 @@ function onHideDetails() {
     document.querySelector('.modal').close()
 }
 
-function onUserInput(event) {
-    console.log('variable');
-    
+function onUserInput(event) {    
     var usrInput = event.target.value
-    var readyToUseInput = usrInput.toLowerCase()
-    gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
+    getUserInput(usrInput)
     render(gFiltered)
 }
 
@@ -132,7 +139,7 @@ function _onSuccess() {
 
 function onFindStats() {
     getCurStats()
-    console.log("🚀 ~ onFindStats ~ curStats:", gStats)
+
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
     const spanNumOfBooks = elFooter.querySelector('.sum-of-books')
@@ -140,15 +147,9 @@ function onFindStats() {
     const spanBetween = elFooter.querySelector('.between')
     const spanBelow100 = elFooter.querySelector('.below-100')
 
-    var numOfBooks = `Total Book Count : ${gStats.BooksCount}`
-    var AveragePricePerBook = `Average Book Price : ${gStats.avgPrice}`
-    var Above200 = `Books above 200$ : ${gStats.moreThen200}`
-    var Between = `Books Between 100$ and 200$ : ${gStats.Between}`
-    var Below100 = `Books Below 100$ : ${gStats.lessThen100}`
-
-    spanNumOfBooks.innerText = numOfBooks
-    spanAveragePricePerBook.innerText = AveragePricePerBook
-    spanAbove200.innerText = Above200
-    spanBetween.innerText = Between
-    spanBelow100.innerText = Below100
+    spanNumOfBooks.innerText = gStats.BooksCount
+    spanAveragePricePerBook.innerText = gStats.avgPrice
+    spanAbove200.innerText = gStats.moreThen200
+    spanBetween.innerText = gStats.Between
+    spanBelow100.innerText = gStats.lessThen100
 }

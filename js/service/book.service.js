@@ -57,13 +57,31 @@ function getCurStats() {
     return acc
   }, 0)
 
+  var numOfBooks = `Total Book Count : ${gBooks.length}`
+  var AveragePricePerBook = `Average Book Price : ${get2DecimalNum(AverageBookPrice)}`
+  var Above200 = `Books above 200$ : ${booksAbove200}`
+  var Between = `Books Between 100$ and 200$ : ${booksBetween}`
+  var Below100 = `Books Below 100$ : ${booksBelow100}`
+
+
   return gStats = {
-    BooksCount: gBooks.length,
-    avgPrice: get2DecimalNum(AverageBookPrice),
-    moreThen200: booksAbove200,
-    Between: booksBetween,
-    lessThen100: booksBelow100,
+    BooksCount: numOfBooks,
+    avgPrice:AveragePricePerBook,
+    moreThen200: Above200,
+    Between: Between,
+    lessThen100: Below100,
   }
+  
+}
+
+function getGFiltered(readyToUseInput){
+  gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
+
+}
+
+function getUserInput(usrInput) {    
+  var readyToUseInput = usrInput.toLowerCase()
+  getGFiltered(readyToUseInput)
 }
 
 function _createBooks() {
