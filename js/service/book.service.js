@@ -9,8 +9,7 @@ function getBooks() {
 
 
 function getBookById(bookId) {
-  var book = gBooks.findIndex(book => book.id === bookId)
-
+  var book = gBooks.find(book => {return book.id === bookId})
   return book
 }
 
@@ -23,8 +22,7 @@ function removeBook(bookId) {
 
 function updatePrice(bookId, newPrice) {
   var book = gBooks.findIndex(book => book.id === bookId)
-book.price = newPrice + '$'
-  // gBooks[idx].price = newPrice + '$'
+  book.price = newPrice + '$'
   _saveBook()
 }
 
@@ -33,12 +31,9 @@ function addBookToGBooks(newReadyBook) {
   updateLocalStorage()
 }
 
-function ShowDetails(imgUrl) {
-  document.querySelector('.modal img').src = imgUrl
-}
 
 function getCurStats(rendedBooks) {
- 
+
   var AverageBookPrice = rendedBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
     acc += clearPriceNum
@@ -51,7 +46,7 @@ function getCurStats(rendedBooks) {
   }, 0)
   var booksBetween = rendedBooks.reduce((acc, book, idx, array) => {
     var clearPriceNum = +book.price.split('$')[0]
-    if (clearPriceNum > 100 && clearPriceNum < 200 ) acc++
+    if (clearPriceNum > 100 && clearPriceNum < 200) acc++
     return acc
   }, 0)
   var booksBelow100 = rendedBooks.reduce((acc, book, idx, array) => {
@@ -60,28 +55,28 @@ function getCurStats(rendedBooks) {
     return acc
   }, 0)
 
-return onFindStats(AverageBookPrice,rendedBooks,booksAbove200,booksBetween,booksBelow100)
+  return onFindStats(AverageBookPrice, rendedBooks, booksAbove200, booksBetween, booksBelow100)
 }
 
 function _createBooks() {
   var books = loadFromStorage('bookDB') // null
 
-  if(!books || !books.length) {
+  if (!books || !books.length) {
 
- books = [
-    { id: '1', title: 'drawing Tree', price: '99$', imgUrl: 'img/drawingTree.jpg' },
-    { id: '2', title: 'expiration Dates', price: '201$', imgUrl: 'img/expirationDates.jpg' },
-    { id: '3', title: 'happy Place', price: '150$', imgUrl: 'img/happyPlace.jpg' },
-    { id: '4', title: 'harry Potter', price: '110$', imgUrl: 'img/harryPotter.jpg' },
-    { id: '5', title: 'lions Gaze', price: '180$', imgUrl: 'img/lionsGaze.jpg' }
-  ]
-}
-saveToStorage(BOOK_KEY, books)
-return books
+    books = [
+      { id: '1', title: 'drawing Tree', price: '99$', imgUrl: 'img/drawingTree.jpg' },
+      { id: '2', title: 'expiration Dates', price: '201$', imgUrl: 'img/expirationDates.jpg' },
+      { id: '3', title: 'happy Place', price: '150$', imgUrl: 'img/happyPlace.jpg' },
+      { id: '4', title: 'harry Potter', price: '110$', imgUrl: 'img/harryPotter.jpg' },
+      { id: '5', title: 'lions Gaze', price: '180$', imgUrl: 'img/lionsGaze.jpg' }
+    ]
+  }
+  saveToStorage(BOOK_KEY, books)
+  return books
 
 }
 
 function _saveBook() {
   saveToStorage(BOOK_KEY, gBooks)
- 
- }
+
+}

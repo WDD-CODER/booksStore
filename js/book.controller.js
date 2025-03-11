@@ -3,7 +3,7 @@ var gFiltered = '';
 
 function onInit() {
     render()
-    getBookObjectFromLocalStorage()
+    // getBookObjectFromLocalStorage()
 }
 
 function render() {
@@ -13,18 +13,15 @@ function render() {
         getCurStats(books)
     // }
 
-    const elTable = document.querySelector('table')
-    elTable.innerHTML = `<tbody> <tr class="table-header"><th>title</th><th>price </th><th>action</th></tr></tbody>`
-    const elTbody = elTable.querySelector('tbody')
+    const elTbody = document.querySelector('tbody')
     books.map(book => {
         elTbody.innerHTML += `<tr>
                               <td>${book.title}</td>
                               <td>${book.price}</td>
                               <td>
-                              <button onclick="" class="read-button">read</button>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
-                              <button onclick="onShowDetails('${book.id}','${book.imgUrl}')" class="book-details">details</button>   
+                              <button onclick="onShowDetails('${book.id}')" class="book-details">read</button>   
                               </td></tr>`
     })
     getCurStats(books)
@@ -97,18 +94,21 @@ function onAddBook() {
 }
 
 // debugg this func
-function onShowDetails(bookId, bookImgUrl) {
+function onShowDetails(bookId) {
     const book = getBookById(bookId)
-    // title, price, img
+    console.log("🚀 ~ onShowDetails ~ book:", book)
+    const randPar =  getLoremIpsum()
     const modal = document.querySelector('.modal')
-    const pre = modal.querySelector('pre')
-    const curBook = gBooks[idx]
-    var json = fromObjectToJson(curBook)
-    pre.innerText = json
+    document.querySelector('.book-title').innerText= `book title: ${book.title}` 
+    document.querySelector('.price').innerText=`book price: ${book.price}`
+    document.querySelector('.book-pre').innerText=`book description: ${randPar}`
+    document.querySelector('.book-img').src = book.imgUrl
     modal.showModal()
-    ShowDetails(bookImgUrl)
 }
 
+function ShowDetails(imgUrl) {
+  }
+  
 function onHideDetails() {
     document.querySelector('.modal').close()
 }

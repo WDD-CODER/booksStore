@@ -7,7 +7,46 @@ body {
     flex-direction: column;
     position: relative;
 
+    align-items: center;
+    justify-content: center;
+
     min-height: 95vh
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+
+
+
+    width: 50vw;
+    height: 50vh;
+
+    margin: 3rem;
+}
+
+table {
+    gap: 1rem;
+    width: 100%;
+
+    margin-block-end: 10px;
+    
+    text-align: center;
+    
+    border-collapse: collapse; 
+    border: 2px black solid;
+
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+thead {
+    background-color:  rgb(190, 190, 190);
 }
 
 .modal {
@@ -38,10 +77,10 @@ img {
 
 footer {
     display: flex;
-    
+
     gap: 1rem;
     margin-top: auto;
-    
+
     border: 1px black solid;
     background-color: rgb(202, 202, 202);
 

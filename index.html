@@ -7,22 +7,31 @@
     <link rel="stylesheet" href="css/main.css">
     <title>book store pro</title>
 </head>
-
 <body onload="onInit()">
-    <table>
-        <tbody></tbody>
-</table>
-
-<input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
-<button onclick="onClearSearch()" class="clear">clear search</button>
-
-    <dialog class="modal">
-        <pre></pre>
-        <img>
-        <button onclick="onHideDetails()">Close</button>
-    </dialog>
-
-    <button onclick="onAddBook()" class="add-book">add</button>
+    <h1>The Book Shope</h1>
+        <div class="main-container">
+        <table><thead>
+            <tr class="table-header">
+                <th>title</th>
+                <th>price </th>
+                <th>action</th>
+            </tr></thead>
+            <tbody></tbody>
+    </table>
+    
+    <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
+    <button onclick="onClearSearch()" class="clear">clear search</button>
+    
+        <dialog class="book-details modal">
+            <h1 class="book-title"></h1>
+            <h3 class="price"></h3>
+            <h3 class="book-pre"></h3>
+            <img class="book-img">
+            <button onclick="onHideDetails()">Close</button>
+        </dialog>
+    
+        <button onclick="onAddBook()" class="add-book">add</button>
+</div>
 
     <pre class="success">good job, function implemented successfully </pre>
     <footer class="stats">
