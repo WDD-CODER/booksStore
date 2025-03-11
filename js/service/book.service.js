@@ -14,21 +14,22 @@ function getBookById(bookId) {
 }
 
 function removeBook(bookId) {
-  var bookToRemove = gBooks.findIndex(book => book.id === bookId)
-
+  var bookToRemove = gBooks.find(book => book.id === bookId)
   gBooks.splice(bookToRemove, 1)
   _saveBook()
 }
 
 function updatePrice(bookId, newPrice) {
-  var book = gBooks.findIndex(book => book.id === bookId)
+  var book = gBooks.find(book => {
+    return book.id === bookId
+  })
   book.price = newPrice + '$'
   _saveBook()
 }
 
 function addBookToGBooks(newReadyBook) {
   gBooks.unshift(newReadyBook)
-  updateLocalStorage()
+   _saveBook()
 }
 
 

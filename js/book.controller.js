@@ -29,7 +29,7 @@ function render(bookArray) {
 
 function onRemoveBook(bookId) {
     removeBook(bookId)
-    render()
+    render(gBooks)
     _onSuccess()
 }
 
