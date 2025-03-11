@@ -86,9 +86,12 @@ img {
 
 footer {
     display: flex;
+    justify-content: center;
 
     gap: 1rem;
+    padding: 5px;
     margin-top: auto;
+    
 
     border: 1px black solid;
     background-color: rgb(202, 202, 202);
@@ -96,4 +99,7 @@ footer {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 15px;
 
+}
+footer span{
+    margin-right: 1rem;
 }

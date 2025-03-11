@@ -109,6 +109,8 @@ function onHideDetails() {
 }
 
 function onUserInput(event) {
+    console.log('variable');
+    
     var usrInput = event.target.value
     var readyToUseInput = usrInput.toLowerCase()
     gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
@@ -129,6 +131,7 @@ function _onSuccess() {
 
 
 function onFindStats() {
+    getCurStats()
     console.log("🚀 ~ onFindStats ~ curStats:", gStats)
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')

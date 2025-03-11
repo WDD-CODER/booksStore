@@ -2,10 +2,10 @@
 
 const BOOK_KEY = 'bookDB'
 var gBooks = _createBooks()
-var gStats = getCurStats()
-  function getBooks() {
-    return gBooks
-  }
+var gStats = {}
+function getBooks() {
+  return gBooks
+}
 
 
 function getBookById(bookId) {
@@ -17,6 +17,7 @@ function removeBook(bookId) {
   var bookToRemove = gBooks.find(book => book.id === bookId)
   gBooks.splice(bookToRemove, 1)
   _saveBook()
+
 }
 
 function updatePrice(bookId, newPrice) {
@@ -36,33 +37,33 @@ function addBookToGBooks(newReadyBook) {
 function getCurStats() {
 
   var AverageBookPrice = gBooks.reduce((acc, book, idx, array) => {
-    var clearPriceNum = +book.price.split('$')[0]
-    acc += clearPriceNum
-    return acc
+    // var clearPriceNum = +book.price.split('$')[0]
+    acc += GetClearPrice(book)
+    return acc / gBooks.length
   }, 0)
   var booksAbove200 = gBooks.reduce((acc, book, idx, array) => {
-    var clearPriceNum = +book.price.split('$')[0]
-    if (clearPriceNum > 200) acc++
+    // var clearPriceNum = +book.price.split('$')[0]
+    if (GetClearPrice(book) > 200) acc++
     return acc
   }, 0)
   var booksBetween = gBooks.reduce((acc, book, idx, array) => {
-    var clearPriceNum = +book.price.split('$')[0]
-    if (clearPriceNum > 100 && clearPriceNum < 200) acc++
+    // var clearPriceNum = +book.price.split('$')[0]
+    if (GetClearPrice(book) > 100 && GetClearPrice(book) < 200) acc++
     return acc
   }, 0)
   var booksBelow100 = gBooks.reduce((acc, book, idx, array) => {
-    var clearPriceNum = +book.price.split('$')[0]
-    if (clearPriceNum < 100) acc++
+    // var clearPriceNum = +book.price.split('$')[0]
+    if (GetClearPrice(book) < 100) acc++
     return acc
   }, 0)
 
-  return  {
-                   BooksCount: gBooks.length,
-                   avgPrice: AverageBookPrice,
-                   moreThen200: booksAbove200,
-                   Between: booksBetween,
-                   lessThen100: booksBelow100,
-                 }
+  return gStats = {
+    BooksCount: gBooks.length,
+    avgPrice: get2DecimalNum(AverageBookPrice),
+    moreThen200: booksAbove200,
+    Between: booksBetween,
+    lessThen100: booksBelow100,
+  }
 }
 
 function _createBooks() {
