@@ -54,9 +54,9 @@ function getCurStats() {
     BookPrice += +book.price
     acc.BooksCount++
     acc.avgPrice = +(BookPrice / +acc.BooksCount).toFixed(2)
-    if (book.price > 20) acc.moreThen200++
+    if (book.price > 20) acc.moreThen20++
     else if (book.price > 10 && book.price < 20) acc.Between++
-    else if (book.price < 10) acc.lessThen100++
+    else if (book.price < 10) acc.lessThen10++
     return acc
   }, { BooksCount: 0, avgPrice: 0, moreThen20: 0, Between: 0, lessThen10: 0 })
   return Stats
