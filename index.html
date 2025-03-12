@@ -7,29 +7,31 @@
     <link rel="stylesheet" href="css/main.css">
     <title>book store pro</title>
 </head>
+
 <body onload="onInit()">
     <h1>The Book Shope</h1>
-        <section class="main-container">
+    <section class="main-container">
         <table>
             <div class="filter-btn">
-                <!-- <form> -->
-                    <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
-                <!-- </form> -->
+                <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
                 <button onclick="onResetFilter()" class="clear">clear search</button>
                 <button onclick="onAddBook()" class="add-book">add</button>
                 <button onclick="onSetLayout(this)" class="card-layout">💳</button>
                 <button onclick="onSetLayout(this)" class="table">📑</button>
             </div>
-            <thead> <tr class="table-header">
-                <th>title</th>
-                <th>price </th>
-                <th>action</th>
-            </tr></thead>
+            <thead>
+                <tr class="table-header">
+                    <th>title</th>
+                    <th>price </th>
+                    <th>action</th>
+                </tr>
+            </thead>
             <tbody>
             </tbody>
-    </table>
-    <div class="card-container hidden"></div>
-    
+        </table>
+        <div class="card-container hidden">
+        </div>
+
         <dialog class="book-details modal">
             <form method="dialog">
 
@@ -40,8 +42,8 @@
                 <button>X</button>
             </form>
         </dialog>
-    
-</section>
+
+    </section>
 
     <section class="success hidden">good job, function implemented successfully </section>
     <footer class="stats">

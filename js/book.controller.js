@@ -16,17 +16,22 @@ function render() {
         return
     }
 
+    if (getGLayout() === 'card-layout') {
+        renderBookCards()
+        onFindStats()
+    }
     else
     renderBookTable()
     onFindStats()
-
 }
 
 function renderBookTable() {
+    hideElement('.card-container')
+
     const elTbody = document.querySelector('tbody')
     var strHTMls = gBooks.map(book => {
         return `<tr>
-                              <td>${book.title}</td>
+        <td>${book.title}</td>
                               <td>$${book.price}</td>
                               <td>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
@@ -40,6 +45,24 @@ function renderBookTable() {
 
 
 function renderBookCards() {
+    const elCardContainer = document.querySelector('.card-container')
+    const elTbody = document.querySelector('tbody')
+    elTbody.innerHTML = ''
+    showElement('.card-container')
+
+    var strHTMls = gBooks.map(book => {
+        return `<div class="book-card">
+                              <p>${book.title}</p>
+                              <p>$${book.price}</p>
+                              <section>
+                              <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
+                              <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
+                              <button onclick="onReadBook('${book.id}')" class="book-details">read</button>   
+                              </section></div>`
+    })
+    elCardContainer.innerHTML = strHTMls.join("")
+    onFindStats()
+
 }
 
 // function changeLayout(el){
@@ -52,14 +75,18 @@ function renderBookCards() {
 //     else {
 //         showElement('tbody')
 //         hideElement('.card-container')
-  
+
 //     }
 // }
 
 
 function onSetLayout(el) {
-    if(el.classList.contains('.card-layout')) changeLayout('.card-layout') 
-   else if(el.classList.contains('.table')) changeLayout('.table') 
+    const selector = el.classList[0]
+    changeLayout(selector)
+    console.log("🚀 ~ onSetLayout ~ gLayout:", gLayout)
+    render()
+    // if (el.classList.contains('.card-layout')) changeLayout('.card-layout')
+    // else if (el.classList.contains('.table')) changeLayout('.table')
     //פונקציה שמגדירה את הלייאוט המבוקש ושומרת אותו במשתנה גלובלי לשימוש 
     // עתידי ובנוסף שומרת את הלייאוט לסטורז לשימוש כל פעם שאנחנו מתחילים את ם את האפליקציה
     //נגדיר גם בתחילת האפליקציה את המשתנה הגלובלי של הלייאטו בכדי
@@ -92,13 +119,12 @@ function onUpdateBook(bookId) {
 
     updatePrice(bookId, newBookPrice)
     render()
-    // לעדכן הודעה בהתאם להודעה
     _onSuccess('update')
 }
 
 function onAddBook() {
-   
- // כן יכול להיות שעדיף את השטיה שלי שעושה מענה לכל תשובה של היוזר!
+
+    // כן יכול להיות שעדיף את השטיה שלי שעושה מענה לכל תשובה של היוזר!
 
 
     // const title = prompt('Book title')
@@ -133,10 +159,10 @@ function onAddBook() {
 
     var newBookImgUrl = prompt('what\'s the image\'s url?')
     if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
-    
-    const newReadyBook = createBook(newBookTitle, newBookPrice,newBookImgUrl)    
-     console.log("🚀 ~ onAddBook ~ newReadyBook:", newReadyBook)
-     
+
+    const newReadyBook = createBook(newBookTitle, newBookPrice, newBookImgUrl)
+    console.log("🚀 ~ onAddBook ~ newReadyBook:", newReadyBook)
+
 
     addBook(newReadyBook)
     render()
@@ -157,7 +183,7 @@ function onReadBook(bookId) {
     // זה בעצם להשאיר פרורי לחם במערכת בכדי שבפעולה הבאה היה קל לשוף את המידע
     // אפשרות נוספת היא שימוש במשתנה גלובלי ובו יש את התעות זהות הרלוונטי
 
-    
+
 
     modal.showModal()
 }
@@ -208,7 +234,7 @@ function onFindStats() {
     var Above20 = `Books above $20 : ${curStats.moreThen20}`
     var Between = `Books Between $10 and $20 : ${curStats.Between}`
     var Below10 = `Books Below $10 : ${curStats.lessThen10}`
-    
+
 
     spanNumOfBooks.innerText = numOfBooks
     spanAveragePricePerBook.innerText = AveragePricePerBook

@@ -5,14 +5,25 @@
 body {
     display: flex;
     flex-direction: column;
-    position: relative;
 
     align-items: center;
-    justify-content: center;
 
-    min-height: 95vh
+    min-height: 95vh;
+
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-image: url("../img/backGround.webp");
 }
+h1{
 
+    margin-block: 5rem;
+font-size: 60px;
+font-style: oblique;
+
+color:mistyrose;
+
+
+
+}
 .main-container {
 
     display: flex;
@@ -25,16 +36,16 @@ body {
 }
 
 table {
-    /* table-layout: fixed; */
-    /* display: flex; */
-    /* flex-direction: column; */
     position: relative;
-    gap: 1rem;
-    min-width: 50vw;
-    text-align: center;
 
+    min-width: 50vw;
+    gap: 1rem;
+
+    text-align: center;
     border-collapse: collapse;
-    border: 2px black solid;
+    border: 2px gray solid;
+
+    background-color: antiquewhite;
 
 }
 
@@ -50,12 +61,49 @@ td {
 thead {
     background-color: rgb(190, 190, 190);
 }
-.filter-btn{
-}
-.filter-btn input{
- margin-inline-end: 2rem;
+
+.filter-btn {
+    display: flex;
+    flex-shrink: 0;
+
+    align-items: row;
+
+    min-width: 100%;
+
+    border: 1px gray solid;
+
 }
 
+.filter-btn input {
+    width: 20rem;
+    flex-grow: 1;
+    margin-inline-end: auto;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    min-width: 50vw;
+    gap: 1rem;
+
+    border: 1px black solid;
+}
+
+.book-card {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 1rem;
+
+    margin-block: 1rem;
+    margin-inline-start: 1rem;
+
+    border: 1px black solid;
+
+}
 
 .noticeNoBooks {
     display: flex;
@@ -121,7 +169,6 @@ footer {
     border: 1px black solid;
     background-color: rgb(202, 202, 202);
 
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 15px;
 
 }
@@ -129,4 +176,3 @@ footer {
 footer span {
     margin-right: 1rem;
 }
-

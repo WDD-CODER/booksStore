@@ -6,7 +6,13 @@ var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
 
-function changeLayout(selector){
+function getGLayout(){
+  return gLayout
+}
+
+function changeLayout(selector) {
+gLayout = selector
+
 }
 
 function getBooks() {

@@ -2,22 +2,22 @@
 
 
 function fromObjectToJson(obj) {
-const json = JSON.stringify(obj,null,4)
-return json
+    const json = JSON.stringify(obj, null, 4)
+    return json
 }
 
 function fromJsonToObject(json) {
-const obj = JSON.parse(json)
-return obj
+    const obj = JSON.parse(json)
+    return obj
 }
 
 function getId() {
     return [...Array(8)]
-      .map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26)))
-      .join('');
-  }
-  
-  function makeLorem(wordCount = 100) {
+        .map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26)))
+        .join('');
+}
+
+function makeLorem(wordCount = 100) {
     let str = ''
     let isNewSentence = true
 
