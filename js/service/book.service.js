@@ -1,22 +1,27 @@
 'use strict';
 const BOOK_KEY = 'bookDB'
-
+const NO_IMG_URL = "img/noImg.jpg"
 var gFilter = ''
-var gBooks = _createBooks()
+var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
+var gLayout = ''
 
+function changeLayout(selector){
+}
 
 function getBooks() {
+  if (!gFilter) return gBooks
   var books = gBooks.filter(
     book => book.title.toLowerCase().includes(gFilter.toLowerCase()))
-    console.log("🚀 ~ getBooks ~ books.length:", books.length)
-  if (books.length === 0) renderNoticeNoFilter()
-  else return books
-  // }
+  return books
 }
 
 function setFilter(val) {
   gFilter = val
+}
+
+function getFilterBy() {
+
 }
 
 function getBookById(bookId) {
@@ -32,14 +37,11 @@ function removeBook(bookId) {
 }
 
 function updatePrice(bookId, newPrice) {
-  var book = gBooks.find(book => {
-    return book.id === bookId
-  })
-  book.price = newPrice + '$'
+  var book = gBooks.find(book => book.id === bookId)
+  book.price = newPrice
   _saveBook()
 }
-
-function addBookToGBooks(newReadyBook) {
+function addBook(newReadyBook) {
   gBooks.unshift(newReadyBook)
   _saveBook()
 }
@@ -47,73 +49,53 @@ function addBookToGBooks(newReadyBook) {
 
 function getCurStats() {
 
-  var AverageBookPrice = gBooks.reduce((acc, book, idx, array) => {
-    // var clearPriceNum = +book.price.split('$')[0]
-    acc += GetClearPrice(book)
-    return acc / gBooks.length
-  }, 0)
-  var booksAbove200 = gBooks.reduce((acc, book, idx, array) => {
-    // var clearPriceNum = +book.price.split('$')[0]
-    if (GetClearPrice(book) > 200) acc++
+  var BookPrice = 0
+  const Stats = gBooks.reduce((acc, book) => {
+    BookPrice += +book.price
+    acc.BooksCount++
+    acc.avgPrice = +(BookPrice / +acc.BooksCount).toFixed(2)
+    if (book.price > 20) acc.moreThen200++
+    else if (book.price > 10 && book.price < 20) acc.Between++
+    else if (book.price < 10) acc.lessThen100++
     return acc
-  }, 0)
-  var booksBetween = gBooks.reduce((acc, book, idx, array) => {
-    // var clearPriceNum = +book.price.split('$')[0]
-    if (GetClearPrice(book) > 100 && GetClearPrice(book) < 200) acc++
-    return acc
-  }, 0)
-  var booksBelow100 = gBooks.reduce((acc, book, idx, array) => {
-    // var clearPriceNum = +book.price.split('$')[0]
-    if (GetClearPrice(book) < 100) acc++
-    return acc
-  }, 0)
-
-  var numOfBooks = `Total Book Count : ${gBooks.length}`
-  var AveragePricePerBook = `Average Book Price : ${get2DecimalNum(AverageBookPrice)}`
-  var Above200 = `Books above 200$ : ${booksAbove200}`
-  var Between = `Books Between 100$ and 200$ : ${booksBetween}`
-  var Below100 = `Books Below 100$ : ${booksBelow100}`
-
-
-  return gStats = {
-    BooksCount: numOfBooks,
-    avgPrice: AveragePricePerBook,
-    moreThen200: Above200,
-    Between: Between,
-    lessThen100: Below100,
-  }
-
+  }, { BooksCount: 0, avgPrice: 0, moreThen20: 0, Between: 0, lessThen10: 0 })
+  return Stats
 }
 
-// function getGFiltered(readyToUseInput){
-//   gFiltered = gBooks.filter(book => book.title.toLowerCase().includes(`${readyToUseInput}`))
+function createBook(title, price, url) {
+  const book = {
+    id: getId(),
+    title,
+    price,
+    imgUrl: url || NO_IMG_URL,
+    description: makeLorem(),
+    rating: 0,
+  }
+  return book
+}
 
-// }
-
-// function getUserInput(usrInput) {    
-//   var readyToUseInput = usrInput.toLowerCase()
-//   getGFiltered(readyToUseInput)
-// }
-
-function _createBooks() {
+function _createBooks(num) {
   var books = loadFromStorage('bookDB') // null
-
   if (!books || !books.length) {
+    books = []
+    for (let i = 0; i < num; i++) {
+      console.log('num', num);
 
-    books = [
-      { id: '1', title: 'drawing Tree', price: '99$', imgUrl: 'img/drawingTree.jpg' },
-      { id: '2', title: 'expiration Dates', price: '201$', imgUrl: 'img/expirationDates.jpg' },
-      { id: '3', title: 'happy Place', price: '150$', imgUrl: 'img/happyPlace.jpg' },
-      { id: '4', title: 'harry Potter', price: '110$', imgUrl: 'img/harryPotter.jpg' },
-      { id: '5', title: 'lions Gaze', price: '180$', imgUrl: 'img/lionsGaze.jpg' }
-    ]
+      books.push(
+        createBook(
+          `harry Potter ${i + 1}`,
+          (Math.random() * 100).toFixed(2),
+          `img/harryPotter${i + 1}.jpg`
+        )
+      )
+    }
   }
   saveToStorage(BOOK_KEY, books)
   return books
-
 }
 
 function _saveBook() {
   saveToStorage(BOOK_KEY, gBooks)
 
 }
+

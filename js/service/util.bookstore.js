@@ -1,14 +1,5 @@
 'use strict';
-// var test =     {id:'1', title: 'name1', price: '1$', imgUrl:'lori-ipsi1.jpg' }
 
-// fromObjectToJson(test)
-function GetClearPrice(book){
- return  parseFloat(book.price)
-}
-
-function get2DecimalNum(num){
-  return parseFloat(num).toFixed(2)  
-}
 
 function fromObjectToJson(obj) {
 const json = JSON.stringify(obj,null,4)
@@ -26,9 +17,34 @@ function getId() {
       .join('');
   }
   
-  function getLoremIpsum(){
-    return `Lorem, ipsum dolor sit amet consectetur adipisicing elit
-    Officia voluptatibus at incidunt perspiciatis quos impedit, pariatur 
-    porro cupiditate rem aperiam dignissimos! Tempora veniam ad soluta unde ab, 
-    praesentium totam nam`
-  }
+  function makeLorem(wordCount = 100) {
+    let str = ''
+    let isNewSentence = true
+
+    for (let i = 0; i <= wordCount; i++) {
+        if (isNewSentence) {
+            str += getWord(true) + ' '
+            isNewSentence = false
+        } else {
+            str += getWord(false) + ' '
+            if (!(wordCount % (i + 2))) {
+                str += '.\n'
+                isNewSentence = true
+            }
+        }
+    }
+    return str
+}
+
+function getWord(isUpperCase) {
+    const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    const length = Math.floor(Math.random() * (5 - 2) + 2)
+    let word = ''
+
+    for (let i = 0; i <= length; i++) {
+        word += chars[Math.floor(Math.random() * (25 - 0 + 1) + 0)]
+    }
+
+    if (isUpperCase) word = word.charAt(0).toUpperCase() + word.substring(1)
+    return word
+}

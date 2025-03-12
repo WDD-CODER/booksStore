@@ -9,43 +9,55 @@
 </head>
 <body onload="onInit()">
     <h1>The Book Shope</h1>
-        <div class="main-container">
-        <table><thead>
-            <tr class="table-header">
+        <section class="main-container">
+        <table>
+            <div class="filter-btn">
+                <!-- <form> -->
+                    <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
+                <!-- </form> -->
+                <button onclick="onResetFilter()" class="clear">clear search</button>
+                <button onclick="onAddBook()" class="add-book">add</button>
+                <button onclick="onSetLayout(this)" class="card-layout">💳</button>
+                <button onclick="onSetLayout(this)" class="table">📑</button>
+            </div>
+            <thead> <tr class="table-header">
                 <th>title</th>
                 <th>price </th>
                 <th>action</th>
             </tr></thead>
-            <tbody></tbody>
+            <tbody>
+            </tbody>
     </table>
-    <h3 class="noticeNoBooks hidden">No matching books were found</h3>
-    
-    <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
-    <button onclick="onClearSearch()" class="clear">clear search</button>
+    <div class="card-container hidden"></div>
+
+
+    <!-- <h3 class="noticeNoBooks hidden">No matching books were found</h3> -->
     
         <dialog class="book-details modal">
-            <h1 class="book-title"></h1>
-            <h3 class="price"></h3>
-            <h3 class="book-pre"></h3>
-            <img class="book-img">
-            <button onclick="onHideDetails()">X</button>
+            <form method="dialog">
+
+                <h1 class="book-title"></h1>
+                <h3 class="price"></h3>
+                <h3 class="book-pre"></h3>
+                <img class="book-img">
+                <button>X</button>
+            </form>
         </dialog>
     
-        <button onclick="onAddBook()" class="add-book">add</button>
-</div>
+</section>
 
-    <pre class="success hidden">good job, function implemented successfully </pre>
+    <section class="success hidden">good job, function implemented successfully </section>
     <footer class="stats">
         <span></span>
-        <span class="sum-of-books"></span>
+        <span class="sum-of-books">Total Book Count</span>
         <span></span>
-        <span class="avg-price"></span>
+        <span class="avg-price">Average Book Price</span>
         <span></span>
-        <span class="above-200"></span>
+        <span class="above-200">Books above $20</span>
         <span></span>
-        <span class="between"></span>
+        <span class="between">Books Between $10 and $20 </span>
         <span></span>
-        <span class="below-100"></span>
+        <span class="below-100">Books Below $10</span>
     </footer>
     <script src="js/service/util.bookstore.js"></script>
     <script src="js/service/storage.service.js"></script>

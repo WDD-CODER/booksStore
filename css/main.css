@@ -14,26 +14,23 @@ body {
 }
 
 .main-container {
+
     display: flex;
     flex-direction: column;
 
-
-
-    width: 50vw;
-    height: 50vh;
+    min-width: 50vw;
+    min-height: 50vh;
 
     margin: 3rem;
 }
 
 table {
-    table-layout: fixed;
+    /* table-layout: fixed; */
+    /* display: flex; */
+    /* flex-direction: column; */
     position: relative;
     gap: 1rem;
-    width: fit-content
-    /* width: 100%; */
-
-    /* margin-block-end: 10px; */
-
+    min-width: 50vw;
     text-align: center;
 
     border-collapse: collapse;
@@ -53,14 +50,20 @@ td {
 thead {
     background-color: rgb(190, 190, 190);
 }
+.filter-btn{
+}
+.filter-btn input{
+ margin-inline-end: 2rem;
+}
+
 
 .noticeNoBooks {
     display: flex;
-flex-shrink: 0;
-    /* justify-content: center;
-    align-items: center; */
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
 
-    width:inherit;
+    width: inherit;
     height: 50%;
 
     margin: 0;
@@ -127,7 +130,3 @@ footer span {
     margin-right: 1rem;
 }
 
-/* table-grid{
-    display: grid;
-    grid-template-columns: repeat(3) 30%;
-} */
