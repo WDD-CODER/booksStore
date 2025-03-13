@@ -88,7 +88,7 @@ function createBook(title, price, url) {
     price,
     imgUrl: url || NO_IMG_URL,
     description: makeLorem(),
-    rating: 0,
+    rating: Math.random.toFixed(1),
   }
   return book
 }

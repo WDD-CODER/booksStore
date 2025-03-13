@@ -7,21 +7,21 @@ function render() {
     const books = getBooks()
     if (!books.length) {
         renderNoticeNoFilter()
-        renderStats()
+        onRenderStats()
         return
     }
 
     if (getGLayout() === 'card-layout') {
         renderBookCards()
-        renderStats()
+        onRenderStats()
     }
     else
-        renderBookTable()
-    renderStats()
+    renderBookTable()
+    onRenderStats()
 }
 
 function renderBookTable() {
-    hideElement('.card-container')
+    onHideElement('.card-container')
 
     const elTbody = document.querySelector('tbody')
     var strHTMls = gBooks.map(book => {
@@ -36,7 +36,7 @@ function renderBookTable() {
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
-    renderStats()
+    onRenderStats()
 }
 
 
@@ -44,7 +44,7 @@ function renderBookCards() {
     const elCardContainer = document.querySelector('.card-container')
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
-    showElement('.card-container')
+    onShowElement('.card-container')
 
     var strHTMls = gBooks.map(book => {
         return `<div class="book-card">
@@ -59,7 +59,7 @@ function renderBookCards() {
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
-    renderStats()
+    onRenderStats()
 
 }
 
@@ -71,7 +71,7 @@ function onSetLayout(el) {
 }
 
 function renderNoticeNoFilter() {
-    hideElement('.card-container')
+    onHideElement('.card-container')
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     var msg = 'No matching books were found'
@@ -156,22 +156,23 @@ function onAddBookByModal(event) {
     const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
     addBook(newBook)
     render()
-    renderStats()
+    onRenderStats()
 
 }
 
 
 function onReadBook(bookId) {
     const book = getBookById(bookId)
-    
-    localStorage.setItem('curBookId', bookId)
     const modal = document.querySelector('.modal')
+
+    localStorage.setItem('curBookId', bookId)
+    
     document.querySelector('.book-title').innerText = book.title
     document.querySelector('.price').innerText = `price: $ ${book.price}`
     document.querySelector('.book-pre').innerText = `book description: ${book.description}`
     document.querySelector('.show-rating').innerText = book.rating
     document.querySelector('.book-img').src = book.imgUrl
-    
+
     modal.showModal()
 }
 
@@ -189,10 +190,10 @@ function onResetFilter() {
 }
 function _onSuccess(str) {
     const msg = `book was ${str} successfully`
-    showElement('.success')
+    onShowElement('.success')
     document.querySelector('.success').innerText = msg
     setTimeout(() => {
-        hideElement('.success')
+        onHideElement('.success')
     }, 2000);
 }
 
@@ -213,11 +214,11 @@ function onUpdateRating(event, el) {
     }
     updateRating(curBook.id, curBook.rating)
     onReadBook(curBook.id)
-    renderStats()
+    onRenderStats()
     render()
 }
 
-function renderStats() {
+function onRenderStats() {
     const curStats = getCurStats()
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
@@ -233,12 +234,12 @@ function renderStats() {
     spanBelow100.innerText = `Books Below $10 : ${curStats.lessThen10}`
 }
 
-function showElement(selector) {
+function onShowElement(selector) {
     const element = document.querySelector(selector)
     element.classList.remove("hidden")
 }
 
-function hideElement(selector) {
+function onHideElement(selector) {
     const element = document.querySelector(selector)
     element.classList.add("hidden")
 }
