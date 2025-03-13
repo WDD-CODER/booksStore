@@ -10,16 +10,26 @@
 
 <body onload="onInit()">
     <h1>The Book Shope</h1>
-    <section class="main-container">
-        <table>
-            <div class="filter-btn">
-                <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
-                <button onclick="onResetFilter()" class="clear">clear search</button>
-                <button onclick="onAddBook()" class="add-book">add</button>
-                <button onclick="onOpenBookModal()" class="add-book">add by modal</button>
-                <button onclick="onSetLayout(this)" class="card-layout">💳</button>
-                <button onclick="onSetLayout(this)" class="table">📑</button>
+    <div class="main-container">
+        <div class="filter-btn"> 
+            <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
+            <button onclick="onResetFilter()" class="clear">clear search</button>
+            <button onclick="onAddBook()" class="add-book">add</button>
+            <button onclick="onOpenBookModal()" class="add-book">add by modal</button>
+            <button onclick="onSetLayout(this)" class="card-layout">💳</button>
+            <button onclick="onSetLayout(this)" class="table">📑</button>
+            <div class="sort-by">
+                <select class="sort-field" onchange="onChangeSorting(this)">
+                    <option value="">Select minimum rating</option>
+                    <option value="⭐">⭐</option>
+                    <option value="⭐⭐">⭐⭐</option>
+                    <option value="⭐⭐⭐">⭐⭐⭐</option>
+                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+                </select>
             </div>
+            </div>
+        <table>
             <thead>
                 <tr class="table-header">
                     <th>title</th>
@@ -69,7 +79,7 @@
             </form>
         </dialog>
 
-    </section>
+    </div>
 
     <section class="success hidden">good job, function implemented successfully </section>
     <footer class="stats">

@@ -1,30 +1,31 @@
 'use strict';
 
+  
 function onInit() {
     render()
 }
 function render() {
-    const books = getBooks()
+    const books = getBooks(gQueryOptions)
     if (!books.length) {
         renderNoticeNoFilter()
-        onRenderStats()
+        onRenderStats(books)
         return
     }
 
     if (getGLayout() === 'card-layout') {
-        renderBookCards()
-        onRenderStats()
+        renderBookCards(books)
+        onRenderStats(books)
     }
     else
-    renderBookTable()
-    onRenderStats()
+        renderBookTable(books)
+    onRenderStats(books)
 }
 
-function renderBookTable() {
+function renderBookTable(books) {
     onHideElement('.card-container')
 
     const elTbody = document.querySelector('tbody')
-    var strHTMls = gBooks.map(book => {
+    var strHTMls = books.map(book => {
         return `<tr>
                               <td>${book.title}</td>
                               <td>$${book.price}</td>
@@ -40,13 +41,13 @@ function renderBookTable() {
 }
 
 
-function renderBookCards() {
+function renderBookCards(books) {
     const elCardContainer = document.querySelector('.card-container')
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     onShowElement('.card-container')
 
-    var strHTMls = gBooks.map(book => {
+    var strHTMls = books.map(book => {
         return `<div class="book-card">
                               <p>${book.title}</p>
                               <p>$${book.price}</p>
@@ -101,29 +102,18 @@ function onUpdateBook(bookId) {
 }
 
 function onAddBook() {
-
-
-
-    //Make sure book has a legit title
     var newBookTitle = prompt('what\'s the book\'s title?')
-    while (newBookTitle === null || newBookTitle.trim() === '') {
-        newBookTitle = prompt('book must have a title! please  set it or hit cancel to exit')
-        if (newBookTitle === null) return
+    if (newBookTitle === null || newBookTitle.trim() === '') {
+        alert('book must have a title! please Try again')
+        return
     }
-    //Make sure book has a legit price 
 
     var newBookPrice = prompt('what\'s the book\'s price?')
-    while (newBookPrice.trim() === '') {
-        newBookPrice = prompt('book must have a price! please set it or hit cancel to exit')
-        if (newBookPrice === null) return
+    if (newBookPrice === null || newBookPrice.trim() === '') {
+        alert('book must have a title! please Try again')
+        return
     }
-    //Make sure price is a legit number
-    if (isNaN(newBookPrice)) {
-        while (isNaN(newBookPrice) || newBookPrice.trim() === '') {
-            newBookPrice = prompt('price must me a number only! please set it or hit cancel to exit')
-            if (newBookPrice === null) return
-        }
-    }
+
 
 
     var newBookImgUrl = prompt('what\'s the image\'s url?')
@@ -135,6 +125,15 @@ function onAddBook() {
     render()
     _onSuccess('add')
 }
+
+
+
+function onChangeSorting(el) {
+    const minimumRating = el.value.length
+    gQueryOptions.filterBy.rating = minimumRating
+    render()
+}
+
 
 function onOpenBookModal() {
     const modal = document.querySelector('.add-book.modal')
@@ -166,7 +165,7 @@ function onReadBook(bookId) {
     const modal = document.querySelector('.modal')
 
     localStorage.setItem('curBookId', bookId)
-    
+
     document.querySelector('.book-title').innerText = book.title
     document.querySelector('.price').innerText = `price: $ ${book.price}`
     document.querySelector('.book-pre').innerText = `book description: ${book.description}`
@@ -185,6 +184,7 @@ function onUserInput(event) {
 
 function onResetFilter() {
     setFilter('')
+    clearRating(0)
     render()
     const title = document.querySelector('input').value = ''
 }
@@ -202,13 +202,11 @@ function onUpdateRating(event, el) {
     event.preventDefault()
 
     if (el.innerText.includes('-')) {
-        console.log('-', el.innerText.includes('-'));
         if (curBook.rating <= 0) return
         else
             curBook.rating--
     }
     if (el.innerText.includes('+')) {
-        console.log('-', el.innerText.includes('+'));
         if (curBook.rating >= 5) return
         else curBook.rating++
     }
@@ -218,8 +216,8 @@ function onUpdateRating(event, el) {
     render()
 }
 
-function onRenderStats() {
-    const curStats = getCurStats()
+function onRenderStats(books) {
+    const curStats = getCurStats(books)
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
     const spanNumOfBooks = elFooter.querySelector('.sum-of-books')

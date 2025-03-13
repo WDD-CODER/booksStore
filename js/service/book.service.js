@@ -1,7 +1,15 @@
 'use strict';
+
 const BOOK_KEY = 'bookDB'
 const NO_IMG_URL = "img/noImg.jpg"
-var gFilter = ''
+const gQueryOptions = {
+  filterBy: { txt: '', rating: 0 },
+  sortBy: {},
+  page: { idx: 0, size: 0 }
+}
+
+
+// var gFilter = ''   //getSortBy()
 var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
@@ -16,20 +24,62 @@ function changeLayout(selector) {
 
 }
 
-function getBooks() {
-  if (!gFilter) return gBooks
-  var books = gBooks.filter(
-    book => book.title.toLowerCase().includes(gFilter.toLowerCase()))
+
+
+function getBooks(gQueryOptions) {
+  var options = gQueryOptions || {}
+  const filterByTxt = options.filterBy.txt
+  const filterByRating = options.filterBy.rating
+  if (!filterByTxt && filterByRating < 0) var books = gBooks
+  else if (!filterByTxt && filterByRating > 0) {
+    var books = gBooks.filter(book => book.rating >= gQueryOptions.filterBy.rating)
+  }
+  else {
+    var books = gBooks.filter(
+      book => book.title.toLowerCase().includes(filterByTxt.toLowerCase()))
+      var BooksByRating = books.filter(book => book.rating >= filterByRating)
+      return BooksByRating
+    }
+
   return books
 }
 
+
 function setFilter(val) {
-  gFilter = val
+  // gFilter = val
+  gQueryOptions.filterBy.txt = val
 }
 
-function getFilterBy() {
-
+function clearRating() {
+  // gFilter = val
+  gQueryOptions.filterBy.rating = 0
+  document.querySelector('.sort-field').value = ""
+  // document.querySelector('.sort-field').value = ""
 }
+
+function getSortBy() {
+
+  const txt = gQueryOptions.filterBy.txt;
+  const rating = gQueryOptions.filterBy.rating;
+
+  if (!txt && !rating) return null;
+  if (!txt) return { rating };
+  if (!rating) return { txt };
+
+  return { txt, rating };
+}
+
+// function getSortBy() {
+//   console.log("🚀 ~ getSortBy ~ gQueryOptions:", gQueryOptions)
+//   const txt = gQueryOptions.filterBy.txt
+//   const rating = gQueryOptions.filterBy.rating
+//   var filterBy = {}
+// if (!txt.length && !rating.length ) return null 
+// if (!txt.length ) return filterBy.rating = rating
+// if (!rating.length ) return  filterBy.txt =txt
+//   return filterBy = {txt , rating}
+// }
+
 
 function getNoImgUrl() {
   return NO_IMG_URL
@@ -65,8 +115,7 @@ function addBook(newReadyBook) {
 }
 
 
-function getCurStats() {
-
+function getCurStats(books) {
   var BookPrice = 0
   const Stats = gBooks.reduce((acc, book) => {
     BookPrice += +book.price
@@ -88,7 +137,7 @@ function createBook(title, price, url) {
     price,
     imgUrl: url || NO_IMG_URL,
     description: makeLorem(),
-    rating: Math.random.toFixed(1),
+    rating: getRandomInt(0, 5),
   }
   return book
 }
@@ -98,7 +147,6 @@ function _createBooks(num) {
   if (!books || !books.length) {
     books = []
     for (let i = 0; i < num; i++) {
-      console.log('num', num);
 
       books.push(
         createBook(
