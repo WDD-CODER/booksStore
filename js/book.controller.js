@@ -3,11 +3,6 @@
 function onInit() {
     render()
 }
-
-// זה פונקציה ריקה משטויות היא צריכה להכיל רק פונקציות נקיותץ צריך פונקציה לרנדור טבלה ואחת לרנדור כרטיסים
-// פה הוא שם את התנאי לבדוק אם אין ספרים בכלל או רק מפולטרים
-// הוא עשה זאת בפעולה יזימה של הזרקת האלמנט כשורה מהטבלה במקרה של הטבלה. אין צורך באלמנט בפני עצמו בדום בשיביל זה
-// סטו בחר בדרך של קודם כל להחביא על יידי פונקציות יעודייות את כל האלמנטים ובהתאם לכניסה לנאי אם להציג כרטיסים או טבלה מציג רק את מה שרלוונטי
 function render() {
     const books = getBooks()
     if (!books.length) {
@@ -54,6 +49,7 @@ function renderBookCards() {
         return `<div class="book-card">
                               <p>${book.title}</p>
                               <p>$${book.price}</p>
+                              <img src="${book.imgUrl}" alt="bookImg">
                               <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
@@ -65,35 +61,16 @@ function renderBookCards() {
 
 }
 
-// function changeLayout(el){
-//     console.log("🚀 ~ changeLayout ~ el:", el)
-//     const elMainContainer = document.querySelector('.main-container')
-//     if (el.classList.contains('.card-layout')) {
-//         showElement('.card-container')
-//         hideElement('tbody')
-//     }
-//     else {
-//         showElement('tbody')
-//         hideElement('.card-container')
-
-//     }
-// }
-
 
 function onSetLayout(el) {
     const selector = el.classList[0]
     changeLayout(selector)
     console.log("🚀 ~ onSetLayout ~ gLayout:", gLayout)
     render()
-    // if (el.classList.contains('.card-layout')) changeLayout('.card-layout')
-    // else if (el.classList.contains('.table')) changeLayout('.table')
-    //פונקציה שמגדירה את הלייאוט המבוקש ושומרת אותו במשתנה גלובלי לשימוש 
-    // עתידי ובנוסף שומרת את הלייאוט לסטורז לשימוש כל פעם שאנחנו מתחילים את ם את האפליקציה
-    //נגדיר גם בתחילת האפליקציה את המשתנה הגלובלי של הלייאטו בכדי
-    //  שהאפליקציה תיקח את הערך שקיים בו או אם לא תדפיס את הלייאוט הדיפולטיבי (במקרה שלי טבלה)
 }
 
 function renderNoticeNoFilter() {
+    hideElement('.card-container')
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     var msg = 'No matching books were found'
@@ -123,17 +100,6 @@ function onUpdateBook(bookId) {
 }
 
 function onAddBook() {
-
-    // כן יכול להיות שעדיף את השטיה שלי שעושה מענה לכל תשובה של היוזר!
-
-
-    // const title = prompt('Book title')
-    // const price = +prompt('Book price')
-    // const url = prompt('Book img url?')
-    // if(!title||!price){
-    //     return alert ('Please make sure price and title are filled.')
-    // }
-
 
     //Make sure book has a legit title
     var newBookTitle = prompt('what\'s the book\'s title?')
@@ -178,6 +144,8 @@ function onReadBook(bookId) {
     document.querySelector('.price').innerText = `price:  ${book.price}`
     document.querySelector('.book-pre').innerText = `book description: ${randPars}`
     document.querySelector('.book-img').src = book.imgUrl
+
+
     // בכדי לטפל בבונוס של הדירוג הוא שומר בכל פעם את השם של המודל עם התעודת זהות של הספר בסטורג
     // זה מאפשר לו יותר מאוחר לשלוף את המידע הזה מהלוקל סטורז בכדי להפעיל את העדכון מחיר לספר עם אותו תיודת זהות 
     // זה בעצם להשאיר פרורי לחם במערכת בכדי שבפעולה הבאה היה קל לשוף את המידע
@@ -229,18 +197,11 @@ function onFindStats() {
     const spanBetween = elFooter.querySelector('.between')
     const spanBelow100 = elFooter.querySelector('.below-100')
 
-    var numOfBooks = `Total Book Count : ${curStats.BooksCount}`
-    var AveragePricePerBook = `Average Book Price : ${curStats.avgPrice}`
-    var Above20 = `Books above $20 : ${curStats.moreThen20}`
-    var Between = `Books Between $10 and $20 : ${curStats.Between}`
-    var Below10 = `Books Below $10 : ${curStats.lessThen10}`
-
-
-    spanNumOfBooks.innerText = numOfBooks
-    spanAveragePricePerBook.innerText = AveragePricePerBook
-    spanAbove200.innerText = Above20
-    spanBetween.innerText = Between
-    spanBelow100.innerText = Below10
+    spanNumOfBooks.innerText = `Total Book Count : ${curStats.BooksCount}`
+    spanAveragePricePerBook.innerText = `Average Book Price : ${curStats.avgPrice}`
+    spanAbove200.innerText =  `Books above $20 : ${curStats.moreThen20}`
+    spanBetween.innerText = `Books Between $10 and $20 : ${curStats.Between}`
+    spanBelow100.innerText = `Books Below $10 : ${curStats.lessThen10}`
 }
 
 function showElement(selector) {
@@ -253,9 +214,3 @@ function hideElement(selector) {
     element.classList.add("hidden")
 }
 
-// יצר 2 פונקציות מיועדות להחבאה ולהסתרה של האלמנטים.
-//  שתיהן מקבלות את האלמנט מוסיפות או מסירות לו את הקלאס ששמנו בדום של הסתר לפי סלקטור
-// לראות איפה אני צריך להוסיף אותן בקוד בכדי לפשט את הקריאה
-
-
-function onAddModal() { }

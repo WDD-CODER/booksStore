@@ -13,17 +13,19 @@ body {
     font-family: Georgia, 'Times New Roman', Times, serif;
     background-image: url("../img/backGround.webp");
 }
-h1{
+
+h1 {
 
     margin-block: 5rem;
-font-size: 60px;
-font-style: oblique;
+    font-size: 60px;
+    font-style: oblique;
 
-color:mistyrose;
+    color: mistyrose;
 
 
 
 }
+
 .main-container {
 
     display: flex;
@@ -88,6 +90,13 @@ thead {
     gap: 1rem;
 
     border: 1px black solid;
+    background-color: antiquewhite;
+}
+
+.card-container img {
+    width: 5rem;
+    height: 5rem;
+    margin: 1rem;
 }
 
 .book-card {
@@ -101,11 +110,14 @@ thead {
     margin-block: 1rem;
     margin-inline-start: 1rem;
 
+
+    border-radius: 20%;
     border: 1px black solid;
+    background-color: whitesmoke;
 
 }
 
-.noticeNoBooks {
+/* .noticeNoBooks {
     display: flex;
     flex-shrink: 0;
     justify-content: center;
@@ -118,7 +130,7 @@ thead {
 
     border: 1px black solid;
 
-}
+} */
 
 .hidden {
     display: none;
@@ -142,15 +154,19 @@ thead {
 }
 
 .success {
-    position: center;
-
+    position: absolute;
+top: 150px;
     padding: 1rem;
-    border: 1px black solid;
-
-    background-color: bisque;
+    
+    margin-block-start: 3rem;
 
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 15px;
+
+    border-radius: 8px;
+        border: 1px black solid;
+
+    background-color: bisque;
 }
 
 img {
