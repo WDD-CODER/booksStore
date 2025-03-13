@@ -48,3 +48,12 @@ function getWord(isUpperCase) {
     if (isUpperCase) word = word.charAt(0).toUpperCase() + word.substring(1)
     return word
 }
+
+function repeatRatingStars(num) {
+    var stars = ''
+    for (let i = 0; i < num; i++) {
+      stars += '⭐'
+    }
+    return stars
+  }
+  
