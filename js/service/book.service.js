@@ -47,10 +47,9 @@ function removeBook(bookId) {
 
 }
 
-function updateRating(bookId,val) {
+function updateRating(bookId, val) {
   var bookIdx = gBooks.findIndex(book => book.id === bookId)
   gBooks[bookIdx].rating = val
-  console.log("🚀 ~ updateRating ~  gBooks[bookIdx].rating:",  gBooks[bookIdx].rating)
   _saveBook()
 
 }

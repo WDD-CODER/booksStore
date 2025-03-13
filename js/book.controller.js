@@ -103,10 +103,10 @@ function onUpdateBook(bookId) {
 function onAddBook() {
 
 
-    
+
     //Make sure book has a legit title
     var newBookTitle = prompt('what\'s the book\'s title?')
-    while (newBookTitle.trim() === '' ) {
+    while (newBookTitle === null || newBookTitle.trim() === '') {
         newBookTitle = prompt('book must have a title! please  set it or hit cancel to exit')
         if (newBookTitle === null) return
     }
@@ -163,23 +163,15 @@ function onAddBookByModal(event) {
 
 function onReadBook(bookId) {
     const book = getBookById(bookId)
+    
     localStorage.setItem('curBookId', bookId)
-
     const modal = document.querySelector('.modal')
     document.querySelector('.book-title').innerText = book.title
     document.querySelector('.price').innerText = `price: $ ${book.price}`
     document.querySelector('.book-pre').innerText = `book description: ${book.description}`
     document.querySelector('.show-rating').innerText = book.rating
     document.querySelector('.book-img').src = book.imgUrl
-
-
-    // בכדי לטפל בבונוס של הדירוג הוא שומר בכל פעם את השם של המודל עם התעודת זהות של הספר בסטורג
-    // זה מאפשר לו יותר מאוחר לשלוף את המידע הזה מהלוקל סטורז בכדי להפעיל את העדכון מחיר לספר עם אותו תיודת זהות 
-    // זה בעצם להשאיר פרורי לחם במערכת בכדי שבפעולה הבאה היה קל לשוף את המידע
-    // אפשרות נוספת היא שימוש במשתנה גלובלי ובו יש את התעות זהות הרלוונטי
-
-
-
+    
     modal.showModal()
 }
 
@@ -212,14 +204,14 @@ function onUpdateRating(event, el) {
         console.log('-', el.innerText.includes('-'));
         if (curBook.rating <= 0) return
         else
-        curBook.rating--
+            curBook.rating--
     }
     if (el.innerText.includes('+')) {
         console.log('-', el.innerText.includes('+'));
-        if (curBook.rating  >= 5) return
+        if (curBook.rating >= 5) return
         else curBook.rating++
     }
-    updateRating(curBook.id,curBook.rating)
+    updateRating(curBook.id, curBook.rating)
     onReadBook(curBook.id)
     renderStats()
     render()
