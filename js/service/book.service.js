@@ -6,12 +6,13 @@ var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
 
-function getGLayout(){
+
+function getGLayout() {
   return gLayout
 }
 
 function changeLayout(selector) {
-gLayout = selector
+  gLayout = selector
 
 }
 
@@ -30,7 +31,7 @@ function getFilterBy() {
 
 }
 
-function getNoImgUrl(){
+function getNoImgUrl() {
   return NO_IMG_URL
 }
 
@@ -42,6 +43,14 @@ function getBookById(bookId) {
 function removeBook(bookId) {
   var bookToRemove = gBooks.find(book => book.id === bookId)
   gBooks.splice(bookToRemove, 1)
+  _saveBook()
+
+}
+
+function updateRating(bookId,val) {
+  var bookIdx = gBooks.findIndex(book => book.id === bookId)
+  gBooks[bookIdx].rating = val
+  console.log("🚀 ~ updateRating ~  gBooks[bookIdx].rating:",  gBooks[bookIdx].rating)
   _saveBook()
 
 }
@@ -71,6 +80,7 @@ function getCurStats() {
   }, { BooksCount: 0, avgPrice: 0, moreThen20: 0, Between: 0, lessThen10: 0 })
   return Stats
 }
+
 
 function createBook(title, price, url) {
   const book = {

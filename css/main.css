@@ -142,7 +142,7 @@ thead {
     color: black;
 }
 
-.modal button {
+.modal button.close {
     position: absolute;
 
     width: 30px;
@@ -196,17 +196,11 @@ footer span {
     margin-right: 1rem;
 }
 
-/* .add-book.modal {
-    width: 35vw;
-    height: 25vh;
-    overflow: hidden;
-
-} */
 
 .add-book.modal button {
     display: flex;
-    align-items: center; 
-    justify-content: center; 
+    align-items: center;
+    justify-content: center;
     position: absolute;
 
     width: 20px;
@@ -217,4 +211,53 @@ footer span {
 
     border-radius: 18%;
     background-color: rgb(194, 194, 194);
+}
+
+.rating-div {
+    display: flex; 
+
+    align-items: center; 
+    justify-content: center; 
+
+    gap: 10px;
+    margin-block-start: 1rem; 
+    width: 100%; 
+}
+
+
+.rating-div button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px; 
+    height: 40px;
+    
+    
+    
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    
+    background-color: #50bfff; 
+    border: 2px solid #50bfff; 
+    border-radius: 10px; 
+   
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.rating-div button:hover {
+    background-color: #3a9fd9;
+}
+
+.rating-div .show-rating {
+    width: 50px;
+    height: 40px;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid lightgray;
+    border-radius: 10px;
 }

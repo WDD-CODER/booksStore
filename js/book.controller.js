@@ -26,8 +26,9 @@ function renderBookTable() {
     const elTbody = document.querySelector('tbody')
     var strHTMls = gBooks.map(book => {
         return `<tr>
-        <td>${book.title}</td>
+                              <td>${book.title}</td>
                               <td>$${book.price}</td>
+                              <td>${repeatRatingStars(book.rating)}</td>
                               <td>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
@@ -49,6 +50,7 @@ function renderBookCards() {
         return `<div class="book-card">
                               <p>${book.title}</p>
                               <p>$${book.price}</p>
+                              <p>${repeatRatingStars(book.rating)}</p>
                               <img src="${book.imgUrl}" alt="bookImg">
                               <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
@@ -65,7 +67,6 @@ function renderBookCards() {
 function onSetLayout(el) {
     const selector = el.classList[0]
     changeLayout(selector)
-    console.log("🚀 ~ onSetLayout ~ gLayout:", gLayout)
     render()
 }
 
@@ -101,9 +102,11 @@ function onUpdateBook(bookId) {
 
 function onAddBook() {
 
+
+    
     //Make sure book has a legit title
     var newBookTitle = prompt('what\'s the book\'s title?')
-    while (newBookTitle.trim() === '') {
+    while (newBookTitle.trim() === '' ) {
         newBookTitle = prompt('book must have a title! please  set it or hit cancel to exit')
         if (newBookTitle === null) return
     }
@@ -127,8 +130,6 @@ function onAddBook() {
     if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
 
     const newReadyBook = createBook(newBookTitle, newBookPrice, newBookImgUrl)
-    console.log("🚀 ~ onAddBook ~ newReadyBook:", newReadyBook)
-
 
     addBook(newReadyBook)
     render()
@@ -145,9 +146,6 @@ function onCloseBookModal() {
 }
 
 function onAddBookByModal(event) {
-    // event.preventDefault()
-    console.log("🚀 Prevent Default is working!");
-    // const modal = document.querySelector('.add-book.modal')  
     const title = document.querySelector('[name="book-title"]')
     const price = document.querySelector('[name="book-price"]')
     const imgUrl = document.querySelector('[name="book-img"]')
@@ -155,7 +153,7 @@ function onAddBookByModal(event) {
     if (!price.value || !title.value) {
         alert('Make sure all needed info. price and title are inserted')
     }
-    const newBook =   createBook(title.value, price.value, imgUrl.value ||getNoImgUrl())
+    const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
     addBook(newBook)
     render()
     renderStats()
@@ -165,13 +163,13 @@ function onAddBookByModal(event) {
 
 function onReadBook(bookId) {
     const book = getBookById(bookId)
-    console.log("🚀 ~ onReadBook ~ book:", book)
+    localStorage.setItem('curBookId', bookId)
 
-    const randPars = makeLorem()
     const modal = document.querySelector('.modal')
     document.querySelector('.book-title').innerText = book.title
     document.querySelector('.price').innerText = `price: $ ${book.price}`
-    document.querySelector('.book-pre').innerText = `book description: ${randPars}`
+    document.querySelector('.book-pre').innerText = `book description: ${book.description}`
+    document.querySelector('.show-rating').innerText = book.rating
     document.querySelector('.book-img').src = book.imgUrl
 
 
@@ -206,15 +204,25 @@ function _onSuccess(str) {
     }, 2000);
 }
 
-function onUpdateRating() {
-    // כאן יש את הפריוונט דיפולט כי בגלל שאנחנו נעשה בתוך המודל שהוא בסגנון דיאלוג מודל כפתורים בכדי למנוע מהם
-    //  את ההתנהגות הדיפולטיבית של סגירת המודל אנחנו נקבע להם שהם מעבירים את השינוי והאיוונט בכדי לאפשר פריוונט דיפולט איוונט
+function onUpdateRating(event, el) {
+    const curBook = getBookById(localStorage.getItem('curBookId'))
+    event.preventDefault()
 
-    // UpdateRating
-    // זאת פונקציה שטתפל בסרוויס בבקשה לעדכון הריטינג היא תבדוק אם הדירוג
-    //  אכן עומד בטווח מסויים -0-5 ואם כן היא תעדכן את המחיר של הספר לפי התעודת זהות שלו תשמור אותו ותחזיר אותו
-
-    // בשלב האחרון הוא מקבל חזרה את הבוק ובהתאם מרנדר את הרייטינג לאלמנט הרלוונטי בדום 
+    if (el.innerText.includes('-')) {
+        console.log('-', el.innerText.includes('-'));
+        if (curBook.rating <= 0) return
+        else
+        curBook.rating--
+    }
+    if (el.innerText.includes('+')) {
+        console.log('-', el.innerText.includes('+'));
+        if (curBook.rating  >= 5) return
+        else curBook.rating++
+    }
+    updateRating(curBook.id,curBook.rating)
+    onReadBook(curBook.id)
+    renderStats()
+    render()
 }
 
 function renderStats() {

@@ -24,6 +24,7 @@
                 <tr class="table-header">
                     <th>title</th>
                     <th>price </th>
+                    <th>rating</th>
                     <th>action</th>
                 </tr>
             </thead>
@@ -40,25 +41,30 @@
                 <h3 class="price"></h3>
                 <p class="book-pre"></p>
                 <img class="book-img">
-                <button>X</button>
+                <div class="rating-div">
+                    <button class="one-plus Rating" onclick="onUpdateRating(event,this)">-</button>
+                    <button class="show-rating Rating" onclick="onUpdateRating(event,this)"></button>
+                    <button class="one-minos Rating" onclick="onUpdateRating(event,this)">+</button>
+                </div>
+                <button class="close">X</button>
             </form>
         </dialog>
 
         <dialog class="add-book modal">
             <form method="dialog" onsubmit="onAddBookByModal(event)">
-                <h5 class="modal-instractions">Please make sure to feel  title and Price .url is an option.</h5>
-<div class="book-title">
-    <label>title</label>
-    <input name="book-title" type="text" placeholder="book title" autocomplete="off">
-</div>
-<div class="book-price">
-    <label>price</label>
-    <input name="book-price" type="text" placeholder="book price" autocomplete="off">
-</div>
-<div class="book-img">
-    <label>img url</label>
-    <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
-</div>
+                <h5 class="modal-instractions">Please make sure to feel title and Price .url is an option.</h5>
+                <div class="book-title">
+                    <label>title</label>
+                    <input name="book-title" type="text" placeholder="book title" autocomplete="off">
+                </div>
+                <div class="book-price">
+                    <label>price</label>
+                    <input name="book-price" type="text" placeholder="book price" autocomplete="off">
+                </div>
+                <div class="book-img">
+                    <label>img url</label>
+                    <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
+                </div>
                 <button onclick="onCloseBookModal()">X</button>
             </form>
         </dialog>
