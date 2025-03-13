@@ -7,17 +7,17 @@ function render() {
     const books = getBooks()
     if (!books.length) {
         renderNoticeNoFilter()
-        onFindStats()
+        renderStats()
         return
     }
 
     if (getGLayout() === 'card-layout') {
         renderBookCards()
-        onFindStats()
+        renderStats()
     }
     else
-    renderBookTable()
-    onFindStats()
+        renderBookTable()
+    renderStats()
 }
 
 function renderBookTable() {
@@ -35,7 +35,7 @@ function renderBookTable() {
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
-    onFindStats()
+    renderStats()
 }
 
 
@@ -57,7 +57,7 @@ function renderBookCards() {
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
-    onFindStats()
+    renderStats()
 
 }
 
@@ -135,13 +135,42 @@ function onAddBook() {
     _onSuccess('add')
 }
 
+function onOpenBookModal() {
+    const modal = document.querySelector('.add-book.modal')
+    modal.showModal()
+}
+function onCloseBookModal() {
+    const modal = document.querySelector('.add-book.modal')
+    modal.close()
+}
+
+function onAddBookByModal(event) {
+    // event.preventDefault()
+    console.log("🚀 Prevent Default is working!");
+    // const modal = document.querySelector('.add-book.modal')  
+    const title = document.querySelector('[name="book-title"]')
+    const price = document.querySelector('[name="book-price"]')
+    const imgUrl = document.querySelector('[name="book-img"]')
+
+    if (!price.value || !title.value) {
+        alert('Make sure all needed info. price and title are inserted')
+    }
+    const newBook =   createBook(title.value, price.value, imgUrl.value ||getNoImgUrl())
+    addBook(newBook)
+    render()
+    renderStats()
+
+}
+
+
 function onReadBook(bookId) {
     const book = getBookById(bookId)
+    console.log("🚀 ~ onReadBook ~ book:", book)
 
     const randPars = makeLorem()
     const modal = document.querySelector('.modal')
     document.querySelector('.book-title').innerText = book.title
-    document.querySelector('.price').innerText = `price:  ${book.price}`
+    document.querySelector('.price').innerText = `price: $ ${book.price}`
     document.querySelector('.book-pre').innerText = `book description: ${randPars}`
     document.querySelector('.book-img').src = book.imgUrl
 
@@ -188,7 +217,7 @@ function onUpdateRating() {
     // בשלב האחרון הוא מקבל חזרה את הבוק ובהתאם מרנדר את הרייטינג לאלמנט הרלוונטי בדום 
 }
 
-function onFindStats() {
+function renderStats() {
     const curStats = getCurStats()
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
@@ -199,7 +228,7 @@ function onFindStats() {
 
     spanNumOfBooks.innerText = `Total Book Count : ${curStats.BooksCount}`
     spanAveragePricePerBook.innerText = `Average Book Price : ${curStats.avgPrice}`
-    spanAbove200.innerText =  `Books above $20 : ${curStats.moreThen20}`
+    spanAbove200.innerText = `Books above $20 : ${curStats.moreThen20}`
     spanBetween.innerText = `Books Between $10 and $20 : ${curStats.Between}`
     spanBelow100.innerText = `Books Below $10 : ${curStats.lessThen10}`
 }

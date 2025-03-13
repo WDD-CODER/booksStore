@@ -30,6 +30,10 @@ function getFilterBy() {
 
 }
 
+function getNoImgUrl(){
+  return NO_IMG_URL
+}
+
 function getBookById(bookId) {
   var book = gBooks.find(book => { return book.id === bookId })
   return book
@@ -102,6 +106,5 @@ function _createBooks(num) {
 
 function _saveBook() {
   saveToStorage(BOOK_KEY, gBooks)
-
 }
 
