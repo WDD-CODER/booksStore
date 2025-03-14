@@ -1,5 +1,4 @@
 'use strict';
-
   
 function onInit() {
     render()
@@ -7,18 +6,15 @@ function onInit() {
 function render() {
     const books = getBooks(gQueryOptions)
     if (!books.length) {
-        renderNoticeNoFilter()
-        onRenderStats(books)
+        renderNoticeNoFilter(books)
         return
     }
 
     if (getGLayout() === 'card-layout') {
         renderBookCards(books)
-        onRenderStats(books)
     }
     else
         renderBookTable(books)
-    onRenderStats(books)
 }
 
 function renderBookTable(books) {
@@ -37,7 +33,7 @@ function renderBookTable(books) {
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
-    onRenderStats()
+    onRenderStats(books)
 }
 
 
@@ -60,7 +56,7 @@ function renderBookCards(books) {
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
-    onRenderStats()
+    onRenderStats(books)
 
 }
 
@@ -71,12 +67,13 @@ function onSetLayout(el) {
     render()
 }
 
-function renderNoticeNoFilter() {
+function renderNoticeNoFilter(booksArray) {
     onHideElement('.card-container')
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     var msg = 'No matching books were found'
     elTbody.innerHTML = `<tr><td colspan="3">${msg}</td></tr>`
+    onRenderStats(booksArray)
     return
 
 }
@@ -155,7 +152,6 @@ function onAddBookByModal(event) {
     const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
     addBook(newBook)
     render()
-    onRenderStats()
 
 }
 
@@ -184,7 +180,7 @@ function onUserInput(event) {
 
 function onResetFilter() {
     setFilter('')
-    clearRating(0)
+    clearRating()
     render()
     const title = document.querySelector('input').value = ''
 }
@@ -212,11 +208,11 @@ function onUpdateRating(event, el) {
     }
     updateRating(curBook.id, curBook.rating)
     onReadBook(curBook.id)
-    onRenderStats()
     render()
 }
 
 function onRenderStats(books) {
+
     const curStats = getCurStats(books)
     const elFooter = document.querySelector('footer')
     const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
@@ -227,9 +223,9 @@ function onRenderStats(books) {
 
     spanNumOfBooks.innerText = `Total Book Count : ${curStats.BooksCount}`
     spanAveragePricePerBook.innerText = `Average Book Price : ${curStats.avgPrice}`
-    spanAbove200.innerText = `Books above $20 : ${curStats.moreThen20}`
-    spanBetween.innerText = `Books Between $10 and $20 : ${curStats.Between}`
-    spanBelow100.innerText = `Books Below $10 : ${curStats.lessThen10}`
+    spanAbove200.innerText = `Books above $200 : ${curStats.moreThen200}`
+    spanBetween.innerText = `Books Between $100 and $200 : ${curStats.Between}`
+    spanBelow100.innerText = `Books Below $100 : ${curStats.lessThen100}`
 }
 
 function onShowElement(selector) {

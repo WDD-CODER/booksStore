@@ -9,7 +9,6 @@ const gQueryOptions = {
 }
 
 
-// var gFilter = ''   //getSortBy()
 var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
@@ -37,48 +36,24 @@ function getBooks(gQueryOptions) {
   else {
     var books = gBooks.filter(
       book => book.title.toLowerCase().includes(filterByTxt.toLowerCase()))
-      var BooksByRating = books.filter(book => book.rating >= filterByRating)
-      return BooksByRating
-    }
+    var BooksByRating = books.filter(book => book.rating >= filterByRating)
+    return BooksByRating
+  }
 
   return books
 }
 
 
 function setFilter(val) {
-  // gFilter = val
   gQueryOptions.filterBy.txt = val
 }
 
 function clearRating() {
-  // gFilter = val
   gQueryOptions.filterBy.rating = 0
   document.querySelector('.sort-field').value = ""
-  // document.querySelector('.sort-field').value = ""
 }
 
-function getSortBy() {
 
-  const txt = gQueryOptions.filterBy.txt;
-  const rating = gQueryOptions.filterBy.rating;
-
-  if (!txt && !rating) return null;
-  if (!txt) return { rating };
-  if (!rating) return { txt };
-
-  return { txt, rating };
-}
-
-// function getSortBy() {
-//   console.log("🚀 ~ getSortBy ~ gQueryOptions:", gQueryOptions)
-//   const txt = gQueryOptions.filterBy.txt
-//   const rating = gQueryOptions.filterBy.rating
-//   var filterBy = {}
-// if (!txt.length && !rating.length ) return null 
-// if (!txt.length ) return filterBy.rating = rating
-// if (!rating.length ) return  filterBy.txt =txt
-//   return filterBy = {txt , rating}
-// }
 
 
 function getNoImgUrl() {
@@ -115,17 +90,19 @@ function addBook(newReadyBook) {
 }
 
 
-function getCurStats(books) {
+function getCurStats(booksArray) {
+  console.log("🚀 ~ getCurStats ~ booksArray:", booksArray)
+  const books = booksArray
   var BookPrice = 0
-  const Stats = gBooks.reduce((acc, book) => {
+  const Stats = books.reduce((acc, book) => {
     BookPrice += +book.price
     acc.BooksCount++
     acc.avgPrice = +(BookPrice / +acc.BooksCount).toFixed(2)
-    if (book.price > 20) acc.moreThen20++
-    else if (book.price > 10 && book.price < 20) acc.Between++
-    else if (book.price < 10) acc.lessThen10++
+    if (book.price > 200) acc.moreThen200++
+    else if (book.price > 100 && book.price < 200) acc.Between++
+    else if (book.price < 100) acc.lessThen100++
     return acc
-  }, { BooksCount: 0, avgPrice: 0, moreThen20: 0, Between: 0, lessThen10: 0 })
+  }, { BooksCount: 0, avgPrice: 0, moreThen200: 0, Between: 0, lessThen100: 0 })
   return Stats
 }
 
@@ -147,11 +124,11 @@ function _createBooks(num) {
   if (!books || !books.length) {
     books = []
     for (let i = 0; i < num; i++) {
-
+var randomPrice = (Math.random() * 400).toFixed(2)
       books.push(
         createBook(
           `harry Potter ${i + 1}`,
-          (Math.random() * 100).toFixed(2),
+          +randomPrice,
           `img/harryPotter${i + 1}.jpg`
         )
       )
