@@ -22,10 +22,15 @@ function changeLayout(selector) {
 
 }
 
-function getBooks(gQueryOptions) {
-  var options = gQueryOptions || {}
-  const filterByTxt = options.filterBy.txt
-  const filterByRating = options.filterBy.rating
+function getBooks(booksArray) {
+  var books = FilterBy(booksArray)// אני פה בנושא של הסורט לא מבין לעומק איך להשתמש בו
+
+  return books
+}
+
+function FilterBy(books) {
+  const filterByTxt = gQueryOptions.filterBy.txt
+  const filterByRating = gQueryOptions.filterBy.rating
   if (!filterByTxt && filterByRating < 0) var books = gBooks
   else if (!filterByTxt && filterByRating > 0) {
     var books = gBooks.filter(book => book.rating >= gQueryOptions.filterBy.rating)
@@ -36,10 +41,20 @@ function getBooks(gQueryOptions) {
     var BooksByNameAndRating = books.filter(book => book.rating >= filterByRating)
     return BooksByNameAndRating
   }
-
   return books
 }
 
+function SortBy() {
+  var sortBy = gQueryOptions.sortBy
+
+  if (!sortBy.value.length) return null
+  else if (sortBy === 'Expensive') return 1
+  else return -1
+
+  //  const sortedArray = booksArray.sort(sortBy)
+  //  console.log("🚀 ~ SortBy ~ sortedArray:", sortedArray)
+  // return sortedArray
+}
 
 function setFilter(val) {
   gQueryOptions.filterBy.txt = val
@@ -121,7 +136,7 @@ function _createBooks(num) {
   if (!books || !books.length) {
     books = []
     for (let i = 0; i < num; i++) {
-var randomPrice = (Math.random() * 400).toFixed(2)
+      var randomPrice = (Math.random() * 400).toFixed(2)
       books.push(
         createBook(
           `harry Potter ${i + 1}`,

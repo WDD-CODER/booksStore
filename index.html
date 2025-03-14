@@ -11,72 +11,76 @@
 <body onload="onInit()">
     <h1>The Book Shope</h1>
     <div class="main-container">
-        <div class="filter-btn"> 
+        <div class="filter-btn">
             <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
             <button onclick="onResetFilter()" class="clear">clear search</button>
             <button onclick="onAddBook()" class="add-book">add</button>
             <button onclick="onOpenBookModal()" class="add-book">add by modal</button>
             <button onclick="onSetLayout(this)" class="card-layout">💳</button>
             <button onclick="onSetLayout(this)" class="table">📑</button>
-            <div class="sort-by">
-                <select class="sort-field" onchange="onChangeSorting(this)">
-                    <option value="">Select minimum rating</option>
-                    <option value="⭐">⭐</option>
-                    <option value="⭐⭐">⭐⭐</option>
-                    <option value="⭐⭐⭐">⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-                    <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-                </select>
+            <div class="radio-btn">
+                <label><input onclick="onChangeSorting(this)" type="radio" class="sorting-high" value="Expensive"> Expensive</label>
+                <label><input onclick="onChangeSorting(this)" type="radio" class="sorting-low" value="Cheap"> Cheap</label>
             </div>
-            </div>
-        <table>
-            <thead>
-                <tr class="table-header">
-                    <th>title</th>
-                    <th>price </th>
-                    <th>rating</th>
-                    <th>action</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <div class="card-container hidden">
+                    <div class="sort-by">
+            <select class="sort-field" onchange="onChangeSorting(this)">
+                <option value="">Select minimum rating</option>
+                <option value="⭐">⭐</option>
+                <option value="⭐⭐">⭐⭐</option>
+                <option value="⭐⭐⭐">⭐⭐⭐</option>
+                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+            </select>
         </div>
+    </div>
+    <table>
+        <thead>
+            <tr class="table-header">
+                <th>title</th>
+                <th>price </th>
+                <th>rating</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div class="card-container hidden">
+    </div>
 
-        <dialog class="book-details modal">
-            <form method="dialog">
-                <h1 class="book-title"></h1>
-                <h3 class="price"></h3>
-                <p class="book-pre"></p>
-                <img onerror="this.src='img/noImg.jpg'"  class="book-img">
-                <div class="rating-div">
-                    <button class="one-plus Rating" onclick="onUpdateRating(event,this)">-</button>
-                    <button class="show-rating Rating" onclick="onUpdateRating(event,this)"></button>
-                    <button class="one-minos Rating" onclick="onUpdateRating(event,this)">+</button>
-                </div>
-                <button class="close">X</button>
-            </form>
-        </dialog>
+    <dialog class="book-details modal">
+        <form method="dialog">
+            <h1 class="book-title"></h1>
+            <h3 class="price"></h3>
+            <p class="book-pre"></p>
+            <img onerror="this.src='img/noImg.jpg'" class="book-img">
+            <div class="rating-div">
+                <button class="one-plus Rating" onclick="onUpdateRating(event,this)">-</button>
+                <button class="show-rating Rating" onclick="onUpdateRating(event,this)"></button>
+                <button class="one-minos Rating" onclick="onUpdateRating(event,this)">+</button>
+            </div>
+            <button class="close">X</button>
+        </form>
+    </dialog>
 
-        <dialog class="add-book modal">
-            <form method="dialog" onsubmit="onAddBookByModal(event)">
-                <h5 class="modal-instractions">Please make sure to feel title and Price .url is an option.</h5>
-                <div class="book-title">
-                    <label>title</label>
-                    <input name="book-title" type="text" placeholder="book title" autocomplete="off">
-                </div>
-                <div class="book-price">
-                    <label>price</label>
-                    <input name="book-price" type="text" placeholder="book price" autocomplete="off">
-                </div>
-                <div class="book-img">
-                    <label>img url</label>
-                    <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
-                </div>
-                <button onclick="onCloseBookModal()">X</button>
-            </form>
-        </dialog>
+    <dialog class="add-book modal">
+        <form method="dialog" onsubmit="onAddBookByModal(event)">
+            <h5 class="modal-instractions">Please make sure to feel title and Price .url is an option.</h5>
+            <div class="book-title">
+                <label>title</label>
+                <input name="book-title" type="text" placeholder="book title" autocomplete="off">
+            </div>
+            <div class="book-price">
+                <label>price</label>
+                <input name="book-price" type="text" placeholder="book price" autocomplete="off">
+            </div>
+            <div class="book-img">
+                <label>img url</label>
+                <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
+            </div>
+            <button onclick="onCloseBookModal()">X</button>
+        </form>
+    </dialog>
 
     </div>
 

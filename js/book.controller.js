@@ -1,5 +1,5 @@
 'use strict';
-  
+
 function onInit() {
     render()
 }
@@ -10,8 +10,8 @@ function render() {
         renderNoticeNoFilter(books)
         return
     }
-    if (getGLayout() === 'card-layout')  renderBookCards(books)
-    else renderBookTable(books)   
+    if (getGLayout() === 'card-layout') renderBookCards(books)
+    else renderBookTable(books)
 }
 
 function renderBookTable(books) {
@@ -226,5 +226,20 @@ function onShowElement(selector) {
 function onHideElement(selector) {
     const element = document.querySelector(selector)
     element.classList.add("hidden")
+}
+
+function onChangeSorting(el) {
+    const value = el.value
+    // var sortBy = 0
+    if (value === 'Expensive') {
+        document.querySelector('.sorting-low').checked = false
+        // sortBy = 1
+    }
+    if (value === 'Cheap') {
+        document.querySelector('.sorting-high').checked = false
+        // sortBy = -1
+    }
+    return gQueryOptions.sortBy = { value }
+
 }
 
