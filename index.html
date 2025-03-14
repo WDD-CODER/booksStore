@@ -46,11 +46,10 @@
 
         <dialog class="book-details modal">
             <form method="dialog">
-
                 <h1 class="book-title"></h1>
                 <h3 class="price"></h3>
                 <p class="book-pre"></p>
-                <img class="book-img">
+                <img onerror="this.src='img/noImg.jpg'"  class="book-img">
                 <div class="rating-div">
                     <button class="one-plus Rating" onclick="onUpdateRating(event,this)">-</button>
                     <button class="show-rating Rating" onclick="onUpdateRating(event,this)"></button>

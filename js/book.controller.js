@@ -3,18 +3,15 @@
 function onInit() {
     render()
 }
+
 function render() {
     const books = getBooks(gQueryOptions)
     if (!books.length) {
         renderNoticeNoFilter(books)
         return
     }
-
-    if (getGLayout() === 'card-layout') {
-        renderBookCards(books)
-    }
-    else
-        renderBookTable(books)
+    if (getGLayout() === 'card-layout')  renderBookCards(books)
+    else renderBookTable(books)   
 }
 
 function renderBookTable(books) {
@@ -48,7 +45,7 @@ function renderBookCards(books) {
                               <p>${book.title}</p>
                               <p>$${book.price}</p>
                               <p>${repeatRatingStars(book.rating)}</p>
-                              <img src="${book.imgUrl}" alt="bookImg">
+                              <img src="${book.imgUrl}" onerror="this.src='img/noImg.jpg'" alt="bookImg">
                               <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
@@ -75,7 +72,6 @@ function renderNoticeNoFilter(booksArray) {
     elTbody.innerHTML = `<tr><td colspan="3">${msg}</td></tr>`
     onRenderStats(booksArray)
     return
-
 }
 
 function onRemoveBook(bookId) {
@@ -87,12 +83,10 @@ function onRemoveBook(bookId) {
 
 function onUpdateBook(bookId) {
     var newBookPrice = +prompt('what\'s the new book\'s price?')
-
     if (!newBookPrice || isNaN(newBookPrice)) {
         alert('book must have a price bigger then 0! please set it or hit cancel to exit')
         return
     }
-
     updatePrice(bookId, newBookPrice)
     render()
     _onSuccess('update')
@@ -104,15 +98,11 @@ function onAddBook() {
         alert('book must have a title! please Try again')
         return
     }
-
-    var newBookPrice = prompt('what\'s the book\'s price?')
+    var newBookPrice = +prompt('what\'s the book\'s price?')
     if (newBookPrice === null || newBookPrice.trim() === '') {
         alert('book must have a title! please Try again')
         return
     }
-
-
-
     var newBookImgUrl = prompt('what\'s the image\'s url?')
     if (!newBookImgUrl || newBookImgUrl.trim() === '') newBookImgUrl = 'img/noImg.jpg'
 

@@ -8,8 +8,7 @@ const gQueryOptions = {
   page: { idx: 0, size: 0 }
 }
 
-
-var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
+var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
 var gStats = {}
 var gLayout = ''
 
@@ -23,8 +22,6 @@ function changeLayout(selector) {
 
 }
 
-
-
 function getBooks(gQueryOptions) {
   var options = gQueryOptions || {}
   const filterByTxt = options.filterBy.txt
@@ -36,8 +33,8 @@ function getBooks(gQueryOptions) {
   else {
     var books = gBooks.filter(
       book => book.title.toLowerCase().includes(filterByTxt.toLowerCase()))
-    var BooksByRating = books.filter(book => book.rating >= filterByRating)
-    return BooksByRating
+    var BooksByNameAndRating = books.filter(book => book.rating >= filterByRating)
+    return BooksByNameAndRating
   }
 
   return books
@@ -91,7 +88,6 @@ function addBook(newReadyBook) {
 
 
 function getCurStats(booksArray) {
-  console.log("🚀 ~ getCurStats ~ booksArray:", booksArray)
   const books = booksArray
   var BookPrice = 0
   const Stats = books.reduce((acc, book) => {
@@ -114,10 +110,11 @@ function createBook(title, price, url) {
     price,
     imgUrl: url || NO_IMG_URL,
     description: makeLorem(),
-    rating: getRandomInt(0, 5),
+    rating: getRandomInt(1, 5),
   }
   return book
 }
+
 
 function _createBooks(num) {
   var books = loadFromStorage('bookDB') // null
