@@ -1,5 +1,11 @@
 'use strict';
 
+const gQueryOptions = {
+    filterBy: { txt: '', rating: 0 },
+    sortBy: {},
+    page: { idx: 0, size: 0 }
+  }
+  
 function onInit() {
     render()
 }
@@ -211,12 +217,8 @@ function onChangeSorting(el) {
     if ( value === 'Cheap') {
         document.querySelector('.sorting-high').checked = false
     }
-    
-    render()
-    
+    render()    
     return  
-    //    gQueryOptions.sortBy.value = value
-    // return
 }
 
 function onSetLayout(el) {
@@ -245,4 +247,10 @@ function onShowElement(selector) {
 function onHideElement(selector) {
     const element = document.querySelector(selector)
     element.classList.add("hidden")
+}
+
+function setQueryParams(){
+    const queryParams = new URLSearchParams()
+
+    
 }

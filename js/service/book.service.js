@@ -2,11 +2,6 @@
 
 const BOOK_KEY = 'bookDB'
 const NO_IMG_URL = "img/noImg.jpg"
-const gQueryOptions = {
-  filterBy: { txt: '', rating: 0 },
-  sortBy: {},
-  page: { idx: 0, size: 0 }
-}
 
 var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
 var gStats = {}
@@ -21,41 +16,35 @@ function changeLayout(selector) {
   gLayout = selector
 }
 
-function getBooks(booksArray) {
-  var books = FilterBy(booksArray)
-  if (Object.keys(gQueryOptions.sortBy).length === 0)   return books
- else{
-   var sortedBooks = SortBy(books)
-   return sortedBooks
-  }
-  
-  
-}
-
-function FilterBy(books) {
-  const filterByTxt = gQueryOptions.filterBy.txt
-  const filterByRating = gQueryOptions.filterBy.rating
-  if (!filterByTxt && filterByRating < 0) var books = gBooks
-  else if (!filterByTxt && filterByRating > 0) {
-    var books = gBooks.filter(book => book.rating >= gQueryOptions.filterBy.rating)
-    return books
-  }
+function getBooks(options) {
+var books = gBooks.slice()
+   books = FilterBy(options)
+  if (Object.keys(options.sortBy).length === 0) return books
   else {
-    var books = gBooks.filter(
-      book => book.title.toLowerCase().includes(filterByTxt.toLowerCase()))
-    var BooksByNameAndRating = books.filter(book => book.rating >= filterByRating)
-    return BooksByNameAndRating
+    var sortedBooks = SortBy(books, options)
+    return sortedBooks
   }
-  if (condition) {
+}
+
+function FilterBy(options) {
+  const filterByTxt = options.filterBy.txt.trim()
+  const filterByRating = options.filterBy.rating
+  var books = gBooks
+
+  if (filterByTxt) {
+    const regex = new RegExp(filterByTxt, 'i')
+    books = books.filter(book => regex.test(book.title))
+  }
+  if (filterByRating > 0) books = books.filter(book => book.rating >= filterByRating)
     
-  }
+
+  return books
 }
 
 
 
-function SortBy(books) {
-  const sortBy = gQueryOptions.sortBy.value
-  
+function SortBy(books, options) {
+  const sortBy = options.sortBy.value
   if (sortBy === 'Cheap') books.sort((book1, book2) => {
     return book1.price - book2.price
   })
@@ -73,7 +62,7 @@ function clearRating() {
   gQueryOptions.filterBy.rating = 0
 }
 
-function clearSorting(){
+function clearSorting() {
   gQueryOptions.sortBy = {}
 }
 

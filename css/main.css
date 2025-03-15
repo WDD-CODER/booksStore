@@ -15,7 +15,7 @@ body {
 }
 
 h1 {
-    margin-block: 5rem;
+    margin-block: 3rem;
     font-size: 60px;
     font-style: oblique;
 
@@ -30,7 +30,7 @@ h1 {
     min-width: 50vw;
     min-height: 50vh;
 
-    margin: 3rem;
+    margin: 1rem;
 }
 
 table {
