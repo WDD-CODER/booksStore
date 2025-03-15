@@ -3,7 +3,7 @@
 const BOOK_KEY = 'bookDB'
 const NO_IMG_URL = "img/noImg.jpg"
 
-var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
+var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
 
@@ -17,34 +17,53 @@ function changeLayout(selector) {
 }
 
 function getBooks(options) {
-var books = gBooks.slice()
-   books = FilterBy(options)
-  if (Object.keys(options.sortBy).length === 0) return books
-  else {
-    var sortedBooks = SortBy(books, options)
-    return sortedBooks
+  var books = _FilterBy(options.filterBy)
+  if (options.sortBy !== undefined) books = SortBy(books, options.sortBy.value)
+  if (options.page.idx !== undefined) {
+    const startIdx = options.page.idx * options.page.size
+    books = books.slice(startIdx, startIdx + options.page.size)
   }
+  return books
 }
 
-function FilterBy(options) {
-  const filterByTxt = options.filterBy.txt.trim()
-  const filterByRating = options.filterBy.rating
-  var books = gBooks
+function getLastPage(options) {
+  const length = _FilterBy(options.filterBy).length
+  const numOfPages = Math.ceil(length / options.page.size)
+  return numOfPages
+}
+
+function nextPage() {
+  gQueryOptions.page.idx++
+  const numOfPages = gQueryOptions.page.size /
+    // if (gQueryOptions.page.idx <=  ) {
+    //   console.log('variable', variable);
+
+    // }
+    render()
+}
+function previousPage() {
+  gQueryOptions.page.idx--
+  render()
+}
+
+function _FilterBy(filterBy) {
+  const filterByTxt = filterBy.txt
+  const filterByRating = filterBy.rating
+  var books = gBooks.slice()
 
   if (filterByTxt) {
     const regex = new RegExp(filterByTxt, 'i')
     books = books.filter(book => regex.test(book.title))
   }
   if (filterByRating > 0) books = books.filter(book => book.rating >= filterByRating)
-    
+
 
   return books
 }
 
 
 
-function SortBy(books, options) {
-  const sortBy = options.sortBy.value
+function SortBy(books, sortBy) {
   if (sortBy === 'Cheap') books.sort((book1, book2) => {
     return book1.price - book2.price
   })

@@ -3,9 +3,9 @@
 const gQueryOptions = {
     filterBy: { txt: '', rating: 0 },
     sortBy: {},
-    page: { idx: 0, size: 0 }
-  }
-  
+    page: { idx: 0, size: 5 }
+}
+
 function onInit() {
     render()
 }
@@ -164,10 +164,10 @@ function onUpdateBook(bookId) {
 
 
 
-function clearModal(){
-    const title = document.querySelector('[name="book-title"]').value =''
-    const price = document.querySelector('[name="book-price"]').value =''
-    const imgUrl = document.querySelector('[name="book-img"]').value =''
+function clearModal() {
+    const title = document.querySelector('[name="book-title"]').value = ''
+    const price = document.querySelector('[name="book-price"]').value = ''
+    const imgUrl = document.querySelector('[name="book-img"]').value = ''
 }
 
 function onUserInput(event) {
@@ -178,9 +178,9 @@ function onUserInput(event) {
 
 function onClearFilters() {
     const inputValue = document.querySelector('input').value = ''
-    const ratingValue =   document.querySelector('.rating-field').value = ""
-    const radioBtnCheap =document.querySelector('.sorting-low').checked = false
-    const radioBtnExpensive =document.querySelector('.sorting-high').checked = false
+    const ratingValue = document.querySelector('.rating-field').value = ""
+    const radioBtnCheap = document.querySelector('.sorting-low').checked = false
+    const radioBtnExpensive = document.querySelector('.sorting-high').checked = false
     setFilter('')
     clearRating()
     clearSorting()
@@ -210,15 +210,15 @@ function onUpdateRating(event, el) {
 function onChangeSorting(el) {
     const value = el.value
     gQueryOptions.sortBy.value = value
-    
-    if ( value === 'Expensive') {
+
+    if (value === 'Expensive') {
         document.querySelector('.sorting-low').checked = false
     }
-    if ( value === 'Cheap') {
+    if (value === 'Cheap') {
         document.querySelector('.sorting-high').checked = false
     }
-    render()    
-    return  
+    render()
+    return
 }
 
 function onSetLayout(el) {
@@ -249,8 +249,26 @@ function onHideElement(selector) {
     element.classList.add("hidden")
 }
 
-function setQueryParams(){
-    const queryParams = new URLSearchParams()
+function onNextPage() {
+    const lastPageIdx = getLastPage(gQueryOptions)
+    console.log("🚀 ~ onPreviousPage ~ gQueryOptions.page.idx:", gQueryOptions.page.idx)
 
-    
+    gQueryOptions.page.idx++
+
+    if (gQueryOptions.page.idx >= lastPageIdx) {
+        gQueryOptions.page.idx = 0
+    }
+    render()
+}
+
+function onPreviousPage() {
+    const lastPageIdx = getLastPage(gQueryOptions)
+    console.log("🚀 ~ onPreviousPage ~ lastPageIdx:", lastPageIdx)
+    console.log("🚀 ~ onPreviousPage ~ gQueryOptions.page.idx:", gQueryOptions.page.idx)
+    gQueryOptions.page.idx--
+
+    if (gQueryOptions.page.idx < 0) {
+        gQueryOptions.page.idx = lastPageIdx - 1
+    }
+    render()
 }
