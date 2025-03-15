@@ -19,13 +19,17 @@ function getGLayout() {
 
 function changeLayout(selector) {
   gLayout = selector
-
 }
 
 function getBooks(booksArray) {
-  var books = FilterBy(booksArray)// אני פה בנושא של הסורט לא מבין לעומק איך להשתמש בו
-
-  return books
+  var books = FilterBy(booksArray)
+  if (Object.keys(gQueryOptions.sortBy).length === 0)   return books
+ else{
+   var sortedBooks = SortBy(books)
+   return sortedBooks
+  }
+  
+  
 }
 
 function FilterBy(books) {
@@ -34,6 +38,7 @@ function FilterBy(books) {
   if (!filterByTxt && filterByRating < 0) var books = gBooks
   else if (!filterByTxt && filterByRating > 0) {
     var books = gBooks.filter(book => book.rating >= gQueryOptions.filterBy.rating)
+    return books
   }
   else {
     var books = gBooks.filter(
@@ -41,19 +46,23 @@ function FilterBy(books) {
     var BooksByNameAndRating = books.filter(book => book.rating >= filterByRating)
     return BooksByNameAndRating
   }
-  return books
+  if (condition) {
+    
+  }
 }
 
-function SortBy() {
-  var sortBy = gQueryOptions.sortBy
 
-  if (!sortBy.value.length) return null
-  else if (sortBy === 'Expensive') return 1
-  else return -1
 
-  //  const sortedArray = booksArray.sort(sortBy)
-  //  console.log("🚀 ~ SortBy ~ sortedArray:", sortedArray)
-  // return sortedArray
+function SortBy(books) {
+  const sortBy = gQueryOptions.sortBy.value
+  
+  if (sortBy === 'Cheap') books.sort((book1, book2) => {
+    return book1.price - book2.price
+  })
+  if (sortBy === 'Expensive') books.sort((book1, book2) => {
+    return book2.price - book1.price
+  })
+  return books
 }
 
 function setFilter(val) {
@@ -62,11 +71,11 @@ function setFilter(val) {
 
 function clearRating() {
   gQueryOptions.filterBy.rating = 0
-  document.querySelector('.sort-field').value = ""
 }
 
-
-
+function clearSorting(){
+  gQueryOptions.sortBy = {}
+}
 
 function getNoImgUrl() {
   return NO_IMG_URL
@@ -84,9 +93,9 @@ function removeBook(bookId) {
 
 }
 
-function updateRating(bookId, val) {
+function updateRating(bookId, rating) {
   var bookIdx = gBooks.findIndex(book => book.id === bookId)
-  gBooks[bookIdx].rating = val
+  gBooks[bookIdx].rating = rating
   _saveBook()
 
 }

@@ -13,7 +13,6 @@ function render() {
     if (getGLayout() === 'card-layout') renderBookCards(books)
     else renderBookTable(books)
 }
-
 function renderBookTable(books) {
     onHideElement('.card-container')
 
@@ -26,14 +25,12 @@ function renderBookTable(books) {
                               <td>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
-                              <button onclick="onReadBook('${book.id}')" class="book-details">read</button>   
+                              <button onclick="onRenderBookDetails('${book.id}')" class="book-details">read</button>   
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
     onRenderStats(books)
 }
-
-
 function renderBookCards(books) {
     const elCardContainer = document.querySelector('.card-container')
     const elTbody = document.querySelector('tbody')
@@ -49,48 +46,60 @@ function renderBookCards(books) {
                               <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
-                              <button onclick="onReadBook('${book.id}')" class="book-details">read</button>   
+                              <button onclick="onRenderBookDetails('${book.id}')" class="book-details">read</button>   
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
     onRenderStats(books)
 
 }
+function onRenderStats(books) {
+    const curStats = getCurStats(books)
+    const elFooter = document.querySelector('footer')
+    const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
+    const spanNumOfBooks = elFooter.querySelector('.sum-of-books')
+    const spanAbove200 = elFooter.querySelector('.above-200')
+    const spanBetween = elFooter.querySelector('.between')
+    const spanBelow100 = elFooter.querySelector('.below-100')
 
-
-function onSetLayout(el) {
-    const selector = el.classList[0]
-    changeLayout(selector)
-    render()
+    spanNumOfBooks.innerText = `Total Book Count : ${curStats.BooksCount}`
+    spanAveragePricePerBook.innerText = `Average Book Price : ${curStats.avgPrice}`
+    spanAbove200.innerText = `Books above $200 : ${curStats.moreThen200}`
+    spanBetween.innerText = `Books Between $100 and $200 : ${curStats.Between}`
+    spanBelow100.innerText = `Books Below $100 : ${curStats.lessThen100}`
 }
-
 function renderNoticeNoFilter(booksArray) {
-    onHideElement('.card-container')
     const elTbody = document.querySelector('tbody')
-    elTbody.innerHTML = ''
-    var msg = 'No matching books were found'
-    elTbody.innerHTML = `<tr><td colspan="3">${msg}</td></tr>`
+    const msg = 'No matching books were found'
+    elTbody.innerHTML = `<tr><td colspan="4">${msg}</td></tr>`
+    onHideElement('.card-container')
     onRenderStats(booksArray)
     return
 }
 
-function onRemoveBook(bookId) {
-    if (confirm('Are you sure you want to remove the book?'))
-        removeBook(bookId)
-    render()
-    _onSuccess('remove')
+function _onRenderSuccessMsg(str) {
+    const msg = `book was ${str} successfully`
+    onShowElement('.success')
+    document.querySelector('.success').innerText = msg
+    setTimeout(() => {
+        onHideElement('.success')
+    }, 2000);
+}
+function onRenderBookDetails(bookId) {
+    const book = getBookById(bookId)
+    const modal = document.querySelector('.modal')
+
+    localStorage.setItem('curBookId', bookId)
+
+    document.querySelector('.book-title').innerText = book.title
+    document.querySelector('.price').innerText = `price: $ ${book.price}`
+    document.querySelector('.book-pre').innerText = `book description: ${book.description}`
+    document.querySelector('.show-rating').innerText = book.rating
+    document.querySelector('.book-img').src = book.imgUrl
+
+    modal.showModal()
 }
 
-function onUpdateBook(bookId) {
-    var newBookPrice = +prompt('what\'s the new book\'s price?')
-    if (!newBookPrice || isNaN(newBookPrice)) {
-        alert('book must have a price bigger then 0! please set it or hit cancel to exit')
-        return
-    }
-    updatePrice(bookId, newBookPrice)
-    render()
-    _onSuccess('update')
-}
 
 function onAddBook() {
     var newBookTitle = prompt('what\'s the book\'s title?')
@@ -110,27 +119,8 @@ function onAddBook() {
 
     addBook(newReadyBook)
     render()
-    _onSuccess('add')
+    _onRenderSuccessMsg('add')
 }
-
-
-
-function onChangeSorting(el) {
-    const minimumRating = el.value.length
-    gQueryOptions.filterBy.rating = minimumRating
-    render()
-}
-
-
-function onOpenBookModal() {
-    const modal = document.querySelector('.add-book.modal')
-    modal.showModal()
-}
-function onCloseBookModal() {
-    const modal = document.querySelector('.add-book.modal')
-    modal.close()
-}
-
 function onAddBookByModal(event) {
     const title = document.querySelector('[name="book-title"]')
     const price = document.querySelector('[name="book-price"]')
@@ -139,28 +129,40 @@ function onAddBookByModal(event) {
     if (!price.value || !title.value) {
         alert('Make sure all needed info. price and title are inserted')
     }
+
     const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
+    clearModal()
     addBook(newBook)
     render()
 
 }
 
 
-function onReadBook(bookId) {
-    const book = getBookById(bookId)
-    const modal = document.querySelector('.modal')
-
-    localStorage.setItem('curBookId', bookId)
-
-    document.querySelector('.book-title').innerText = book.title
-    document.querySelector('.price').innerText = `price: $ ${book.price}`
-    document.querySelector('.book-pre').innerText = `book description: ${book.description}`
-    document.querySelector('.show-rating').innerText = book.rating
-    document.querySelector('.book-img').src = book.imgUrl
-
-    modal.showModal()
+function onRemoveBook(bookId) {
+    if (confirm('Are you sure you want to remove the book?'))
+        removeBook(bookId)
+    render()
+    _onRenderSuccessMsg('remove')
 }
 
+function onUpdateBook(bookId) {
+    var newBookPrice = +prompt('what\'s the new book\'s price?')
+    if (!newBookPrice || isNaN(newBookPrice)) {
+        alert('book must have a price bigger then 0! please set it or hit cancel to exit')
+        return
+    }
+    updatePrice(bookId, newBookPrice)
+    render()
+    _onRenderSuccessMsg('update')
+}
+
+
+
+function clearModal(){
+    const title = document.querySelector('[name="book-title"]').value =''
+    const price = document.querySelector('[name="book-price"]').value =''
+    const imgUrl = document.querySelector('[name="book-img"]').value =''
+}
 
 function onUserInput(event) {
     var value = event.target.value
@@ -168,21 +170,19 @@ function onUserInput(event) {
     render()
 }
 
-function onResetFilter() {
+function onClearFilters() {
+    const inputValue = document.querySelector('input').value = ''
+    const ratingValue =   document.querySelector('.rating-field').value = ""
+    const radioBtnCheap =document.querySelector('.sorting-low').checked = false
+    const radioBtnExpensive =document.querySelector('.sorting-high').checked = false
     setFilter('')
     clearRating()
+    clearSorting()
     render()
-    const title = document.querySelector('input').value = ''
-}
-function _onSuccess(str) {
-    const msg = `book was ${str} successfully`
-    onShowElement('.success')
-    document.querySelector('.success').innerText = msg
-    setTimeout(() => {
-        onHideElement('.success')
-    }, 2000);
+
 }
 
+// Update rating in read model
 function onUpdateRating(event, el) {
     const curBook = getBookById(localStorage.getItem('curBookId'))
     event.preventDefault()
@@ -197,49 +197,52 @@ function onUpdateRating(event, el) {
         else curBook.rating++
     }
     updateRating(curBook.id, curBook.rating)
-    onReadBook(curBook.id)
+    onRenderBookDetails(curBook.id)
     render()
-}
-
-function onRenderStats(books) {
-
-    const curStats = getCurStats(books)
-    const elFooter = document.querySelector('footer')
-    const spanAveragePricePerBook = elFooter.querySelector('.avg-price')
-    const spanNumOfBooks = elFooter.querySelector('.sum-of-books')
-    const spanAbove200 = elFooter.querySelector('.above-200')
-    const spanBetween = elFooter.querySelector('.between')
-    const spanBelow100 = elFooter.querySelector('.below-100')
-
-    spanNumOfBooks.innerText = `Total Book Count : ${curStats.BooksCount}`
-    spanAveragePricePerBook.innerText = `Average Book Price : ${curStats.avgPrice}`
-    spanAbove200.innerText = `Books above $200 : ${curStats.moreThen200}`
-    spanBetween.innerText = `Books Between $100 and $200 : ${curStats.Between}`
-    spanBelow100.innerText = `Books Below $100 : ${curStats.lessThen100}`
-}
-
-function onShowElement(selector) {
-    const element = document.querySelector(selector)
-    element.classList.remove("hidden")
-}
-
-function onHideElement(selector) {
-    const element = document.querySelector(selector)
-    element.classList.add("hidden")
 }
 
 function onChangeSorting(el) {
     const value = el.value
-    // var sortBy = 0
-    if (value === 'Expensive') {
+    gQueryOptions.sortBy.value = value
+    
+    if ( value === 'Expensive') {
         document.querySelector('.sorting-low').checked = false
-        // sortBy = 1
     }
-    if (value === 'Cheap') {
+    if ( value === 'Cheap') {
         document.querySelector('.sorting-high').checked = false
-        // sortBy = -1
     }
-    return gQueryOptions.sortBy = { value }
-
+    
+    render()
+    
+    return  
+    //    gQueryOptions.sortBy.value = value
+    // return
 }
 
+function onSetLayout(el) {
+    const selector = el.classList[0]
+    changeLayout(selector)
+    render()
+}
+
+function onChangeRating(el) {
+    const minimumRating = el.value.length
+    gQueryOptions.filterBy.rating = minimumRating
+    render()
+}
+function onOpenBookModal() {
+    const modal = document.querySelector('.add-book.modal')
+    modal.showModal()
+}
+function onCloseBookModal() {
+    const modal = document.querySelector('.add-book.modal')
+    modal.close()
+}
+function onShowElement(selector) {
+    const element = document.querySelector(selector)
+    element.classList.remove("hidden")
+}
+function onHideElement(selector) {
+    const element = document.querySelector(selector)
+    element.classList.add("hidden")
+}
