@@ -14,8 +14,8 @@
         <div class="filter-btn">
             <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
             <button onclick="onClearFilters()" class="clear">clear search</button>
-            <button onclick="onAddBook()" class="add-book">add</button>
-            <button onclick="onOpenBookModal()" class="add-book">add by modal</button>
+            <!-- <button onclick="onAddBook()" class="add-book">add</button> -->
+            <button onclick="onOpenBookModal()" class="add-book">add book by modal</button>
             <button onclick="onSetLayout(this)" class="card-layout">💳</button>
             <button onclick="onSetLayout(this)" class="table">📑</button>
             <div class="radio-btn">
@@ -68,7 +68,7 @@
     </dialog>
 
     <dialog class="add-book modal">
-        <form method="dialog" onsubmit="onAddBookByModal(event)">
+        <form method="dialog" onsubmit="onSaveBookByModal(event)">
             <h5 class="modal-instractions">Please make sure to feel title and Price .url is an option.</h5>
             <div class="book-title">
                 <label>title</label>
@@ -82,7 +82,8 @@
                 <label>img url</label>
                 <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
             </div>
-            <button onclick="onCloseBookModal()">X</button>
+            <button class="submit">submit</button>
+            <button type="button" onclick="onCloseBookModal(event)">X</button>
         </form>
     </dialog>
 

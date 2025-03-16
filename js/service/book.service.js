@@ -6,7 +6,7 @@ const NO_IMG_URL = "img/noImg.jpg"
 var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
 var gStats = {}
 var gLayout = ''
-
+var gBookId = null
 
 function getGLayout() {
   return gLayout
@@ -32,19 +32,19 @@ function getLastPage(options) {
   return numOfPages
 }
 
-function nextPage() {
-  gQueryOptions.page.idx++
-  const numOfPages = gQueryOptions.page.size /
-    // if (gQueryOptions.page.idx <=  ) {
-    //   console.log('variable', variable);
+// function nextPage() {
+//   gQueryOptions.page.idx++
+//   const numOfPages = gQueryOptions.page.size /
+//     // if (gQueryOptions.page.idx <=  ) {
+//     //   console.log('variable', variable);
 
-    // }
-    render()
-}
-function previousPage() {
-  gQueryOptions.page.idx--
-  render()
-}
+//     // }
+//     render()
+// }
+// function previousPage() {
+//   gQueryOptions.page.idx--
+//   render()
+// }
 
 function _FilterBy(filterBy) {
   const filterByTxt = filterBy.txt
@@ -105,17 +105,24 @@ function updateRating(bookId, rating) {
   var bookIdx = gBooks.findIndex(book => book.id === bookId)
   gBooks[bookIdx].rating = rating
   _saveBook()
-
 }
 
-function updatePrice(bookId, newPrice) {
+
+function updateBook(bookId, newTitle, newPrice, newUrl) {
   var book = gBooks.find(book => book.id === bookId)
+  book.title = newTitle
   book.price = newPrice
+  book.imgUrl = newUrl || NO_IMG_URL
+  onRenderSuccessMsg('update')
   _saveBook()
+  return book
 }
+
+
 function addBook(newReadyBook) {
   gBooks.unshift(newReadyBook)
   _saveBook()
+  return newReadyBook
 }
 
 

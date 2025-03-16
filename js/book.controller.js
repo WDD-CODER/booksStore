@@ -31,7 +31,7 @@ function renderBookTable(books) {
                               <td>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
-                              <button onclick="onRenderBookDetails('${book.id}')" class="book-details">read</button>   
+                              <button onclick="onRenderDetailsModal('${book.id}')" class="book-details">read</button>   
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
@@ -52,7 +52,7 @@ function renderBookCards(books) {
                               <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
-                              <button onclick="onRenderBookDetails('${book.id}')" class="book-details">read</button>   
+                              <button onclick="onRenderDetailsModal('${book.id}')" class="book-details">read</button>   
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
@@ -83,15 +83,15 @@ function renderNoticeNoFilter(booksArray) {
     return
 }
 
-function _onRenderSuccessMsg(str) {
-    const msg = `book was ${str} successfully`
+function onRenderSuccessMsg(newMsg) {
+    const msg = `book was ${newMsg} successfully`
     onShowElement('.success')
     document.querySelector('.success').innerText = msg
     setTimeout(() => {
         onHideElement('.success')
     }, 2000);
 }
-function onRenderBookDetails(bookId) {
+function onRenderDetailsModal(bookId) {
     const book = getBookById(bookId)
     const modal = document.querySelector('.modal')
 
@@ -125,20 +125,29 @@ function onAddBook() {
 
     addBook(newReadyBook)
     render()
-    _onRenderSuccessMsg('add')
+    onRenderSuccessMsg('add')
 }
-function onAddBookByModal(event) {
+function onSaveBookByModal() {
     const title = document.querySelector('[name="book-title"]')
     const price = document.querySelector('[name="book-price"]')
     const imgUrl = document.querySelector('[name="book-img"]')
 
     if (!price.value || !title.value) {
         alert('Make sure all needed info. price and title are inserted')
+        return
+    }
+    console.log("🚀 ~ onSaveBookByModal ~ gBookId:", gBookId)
+    if (gBookId) {
+        updateBook(gBookId, title.value, price.value, imgUrl.value)
+        gBookId = null
+
+    }
+    else {
+        const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
+        addBook(newBook)
     }
 
-    const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
     clearModal()
-    addBook(newBook)
     render()
 
 }
@@ -148,23 +157,30 @@ function onRemoveBook(bookId) {
     if (confirm('Are you sure you want to remove the book?'))
         removeBook(bookId)
     render()
-    _onRenderSuccessMsg('remove')
+    onRenderSuccessMsg('remove')
 }
 
-function onUpdateBook(bookId) {
-    var newBookPrice = +prompt('what\'s the new book\'s price?')
-    if (!newBookPrice || isNaN(newBookPrice)) {
-        alert('book must have a price bigger then 0! please set it or hit cancel to exit')
-        return
-    }
-    updatePrice(bookId, newBookPrice)
-    render()
-    _onRenderSuccessMsg('update')
+function onUpdateBook(bookId, newTitle, newPrice, newUrl) {
+    gBookId = bookId
+    const modal = document.querySelector('.add-book.modal')
+    const title = document.querySelector('[name="book-title"]')
+    const price = document.querySelector('[name="book-price"]')
+    const imgUrl = document.querySelector('[name="book-img"]')
+
+    var book = getBookById(bookId)
+
+    title.value = book.title
+    price.value = book.price
+    imgUrl.value = book.imgUrl
+
+    modal.showModal()
+    return book
 }
 
 
 
 function clearModal() {
+    const modal = document.querySelector('.add-book.modal')
     const title = document.querySelector('[name="book-title"]').value = ''
     const price = document.querySelector('[name="book-price"]').value = ''
     const imgUrl = document.querySelector('[name="book-img"]').value = ''
@@ -203,8 +219,9 @@ function onUpdateRating(event, el) {
         else curBook.rating++
     }
     updateRating(curBook.id, curBook.rating)
-    onRenderBookDetails(curBook.id)
+    onRenderDetailsModal(curBook.id)
     render()
+    return curBook
 }
 
 function onChangeSorting(el) {
@@ -232,11 +249,17 @@ function onChangeRating(el) {
     gQueryOptions.filterBy.rating = minimumRating
     render()
 }
-function onOpenBookModal() {
+function onOpenBookModal() {  
+    clearModal()  
     const modal = document.querySelector('.add-book.modal')
+    const title = document.querySelector('[name="book-title"]')
+    const price = document.querySelector('[name="book-price"]')
+    const imgUrl = document.querySelector('[name="book-img"]')
+
     modal.showModal()
 }
-function onCloseBookModal() {
+function onCloseBookModal(event) {
+    event.preventDefault()
     const modal = document.querySelector('.add-book.modal')
     modal.close()
 }
@@ -251,8 +274,6 @@ function onHideElement(selector) {
 
 function onNextPage() {
     const lastPageIdx = getLastPage(gQueryOptions)
-    console.log("🚀 ~ onPreviousPage ~ gQueryOptions.page.idx:", gQueryOptions.page.idx)
-
     gQueryOptions.page.idx++
 
     if (gQueryOptions.page.idx >= lastPageIdx) {
@@ -263,8 +284,6 @@ function onNextPage() {
 
 function onPreviousPage() {
     const lastPageIdx = getLastPage(gQueryOptions)
-    console.log("🚀 ~ onPreviousPage ~ lastPageIdx:", lastPageIdx)
-    console.log("🚀 ~ onPreviousPage ~ gQueryOptions.page.idx:", gQueryOptions.page.idx)
     gQueryOptions.page.idx--
 
     if (gQueryOptions.page.idx < 0) {
