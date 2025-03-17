@@ -92,6 +92,7 @@ function onRenderSuccessMsg(newMsg) {
     }, 2000);
 }
 function onRenderDetailsModal(bookId) {
+    gBookId = bookId
     const book = getBookById(bookId)
     const modal = document.querySelector('.modal')
 
@@ -127,26 +128,25 @@ function onAddBook() {
     render()
     onRenderSuccessMsg('add')
 }
-function onSaveBookByModal() {
+function onAddBookByModal() {
     const title = document.querySelector('[name="book-title"]')
     const price = document.querySelector('[name="book-price"]')
+    console.log("🚀 ~ onAddBookByModal ~ price:", price.value)
     const imgUrl = document.querySelector('[name="book-img"]')
-
+    const rating = document.querySelector('.show-rating')
+    
     if (!price.value || !title.value) {
         alert('Make sure all needed info. price and title are inserted')
         return
     }
-    console.log("🚀 ~ onSaveBookByModal ~ gBookId:", gBookId)
     if (gBookId) {
         updateBook(gBookId, title.value, price.value, imgUrl.value)
-        gBookId = null
-
     }
     else {
         const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
         addBook(newBook)
     }
-
+    gBookId = null
     clearModal()
     render()
 
@@ -159,26 +159,10 @@ function onRemoveBook(bookId) {
     render()
     onRenderSuccessMsg('remove')
 }
-
-function onUpdateBook(bookId, newTitle, newPrice, newUrl) {
-    gBookId = bookId
-    const modal = document.querySelector('.add-book.modal')
-    const title = document.querySelector('[name="book-title"]')
-    const price = document.querySelector('[name="book-price"]')
-    const imgUrl = document.querySelector('[name="book-img"]')
-
-    var book = getBookById(bookId)
-
-    title.value = book.title
-    price.value = book.price
-    imgUrl.value = book.imgUrl
-
-    modal.showModal()
-    return book
-}
+// 
 
 
-
+// פה אפשר ליצור משהו שעקב אחרי הקווריי ומשם מאפס את הקווארי ודואג לתת ערך דיפולטיבי ומעדכן את כל המקומות השונים בהתאם 
 function clearModal() {
     const modal = document.querySelector('.add-book.modal')
     const title = document.querySelector('[name="book-title"]').value = ''
@@ -204,27 +188,53 @@ function onClearFilters() {
 
 }
 
+function onUpdateBook(bookId, newTitle, newPrice, newUrl) {
+    gBookId = bookId;
+    var book = getBookById(bookId);
+    const modal = document.querySelector('.add-book.modal');
+    const title = document.querySelector('[name="book-title"]');
+    const price = document.querySelector('[name="book-price"]');
+    const imgUrl = document.querySelector('[name="book-img"]');
+    const rating = document.querySelector('[name="rating"]');
+
+    rating.innerText = book.rating;
+    title.value = book.title;
+    price.value = book.price;
+    imgUrl.value = book.imgUrl;
+    document.querySelector('.book-img-update').src = book.imgUrl; 
+
+    modal.showModal();
+    return book;
+}
+
+
 // Update rating in read model
 function onUpdateRating(event, el) {
-    const curBook = getBookById(localStorage.getItem('curBookId'))
+    const curBook = getBookById(gBookId)
     event.preventDefault()
 
     if (el.innerText.includes('-')) {
         if (curBook.rating <= 0) return
-        else
-            curBook.rating--
+        else curBook.rating--
+
     }
     if (el.innerText.includes('+')) {
         if (curBook.rating >= 5) return
         else curBook.rating++
     }
     updateRating(curBook.id, curBook.rating)
-    onRenderDetailsModal(curBook.id)
+    var ratingBtns = document.querySelectorAll('button.show-rating').forEach((el) => el.innerText = curBook.rating)
     render()
     return curBook
 }
+function onChangeRating(el) {
+    const minimumRating = el.value.length
+    gQueryOptions.filterBy.rating = minimumRating
+    render()
+}
 
-function onChangeSorting(el) {
+
+function onChangeRadioBtn(el) {
     const value = el.value
     gQueryOptions.sortBy.value = value
 
@@ -244,18 +254,9 @@ function onSetLayout(el) {
     render()
 }
 
-function onChangeRating(el) {
-    const minimumRating = el.value.length
-    gQueryOptions.filterBy.rating = minimumRating
-    render()
-}
-function onOpenBookModal() {  
-    clearModal()  
+function onOpenBookModal() {
+    clearModal()
     const modal = document.querySelector('.add-book.modal')
-    const title = document.querySelector('[name="book-title"]')
-    const price = document.querySelector('[name="book-price"]')
-    const imgUrl = document.querySelector('[name="book-img"]')
-
     modal.showModal()
 }
 function onCloseBookModal(event) {

@@ -15,7 +15,7 @@ function getGLayout() {
 function changeLayout(selector) {
   gLayout = selector
 }
-
+// פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויותץ
 function getBooks(options) {
   var books = _FilterBy(options.filterBy)
   if (options.sortBy !== undefined) books = SortBy(books, options.sortBy.value)

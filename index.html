@@ -19,8 +19,8 @@
             <button onclick="onSetLayout(this)" class="card-layout">💳</button>
             <button onclick="onSetLayout(this)" class="table">📑</button>
             <div class="radio-btn">
-                <label><input onclick="onChangeSorting(this)" type="radio" class="sorting-high" value="Expensive"> Expensive</label>
-                <label><input onclick="onChangeSorting(this)" type="radio" class="sorting-low" value="Cheap"> Cheap</label>
+                <label><input onclick="onChangeRadioBtn(this)" type="radio" class="sorting-high" value="Expensive"> Expensive</label>
+                <label><input onclick="onChangeRadioBtn(this)" type="radio" class="sorting-low" value="Cheap"> Cheap</label>
             </div>
                     <div class="sort-by">
             <select class="rating-field" onchange="onChangeRating(this)">
@@ -59,16 +59,16 @@
             <p class="book-pre"></p>
             <img onerror="this.src='img/noImg.jpg'" class="book-img">
             <div class="rating-div">
-                <button class="one-plus Rating" onclick="onUpdateRating(event,this)">-</button>
-                <button class="show-rating Rating" onclick="onUpdateRating(event,this)"></button>
-                <button class="one-minos Rating" onclick="onUpdateRating(event,this)">+</button>
+                <button class="one-plus" onclick="onUpdateRating(event,this)">-</button>
+                <button class="show-rating" onclick="onUpdateRating(event,this)"></button>
+                <button class="one-minos " onclick="onUpdateRating(event,this)">+</button>
             </div>
             <button class="close">X</button>
         </form>
     </dialog>
 
     <dialog class="add-book modal">
-        <form method="dialog" onsubmit="onSaveBookByModal(event)">
+        <form method="dialog" onsubmit="onAddBookByModal(event)">
             <h5 class="modal-instractions">Please make sure to feel title and Price .url is an option.</h5>
             <div class="book-title">
                 <label>title</label>
@@ -83,8 +83,14 @@
                 <input name="book-img" type="text" placeholder="http(s)://.............jpeg" autocomplete="off">
             </div>
             <button class="submit">submit</button>
-            <button type="button" onclick="onCloseBookModal(event)">X</button>
+            <button class="close" type="button" onclick="onCloseBookModal(event)">X</button>
         </form>
+        <img onerror="this.src='img/noImg.jpg'" class="book-img-update">
+        <div class="rating-div">
+            <button type="button" class="one-plus " onclick="onUpdateRating(event,this)">-</button>
+            <button name="rating" type="button" class="show-rating " onclick="onUpdateRating(event,this)"></button>
+            <button type="button" class="one-minos " onclick="onUpdateRating(event,this)">+</button>
+        </div>
     </dialog>
 
     </div>
