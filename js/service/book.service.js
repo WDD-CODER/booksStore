@@ -3,19 +3,19 @@
 const BOOK_KEY = 'bookDB'
 const NO_IMG_URL = "img/noImg.jpg"
 
-var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(5)
+var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
 var gStats = {}
-var gLayout = ''
 var gBookId = null
 
 function getGLayout() {
+ const gLayout = loadFromStorage('gLayout')
   return gLayout
 }
 
 function changeLayout(selector) {
-  gLayout = selector
+  saveToStorage('gLayout',selector )
 }
-// פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויותץ
+// פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויוץ
 function getBooks(options) {
   var books = _FilterBy(options.filterBy)
   if (options.sortBy !== undefined) books = SortBy(books, options.sortBy.value)
