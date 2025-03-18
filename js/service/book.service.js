@@ -7,6 +7,7 @@ var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
 var gStats = {}
 var gBookId = null
 
+
 function getGLayout() {
   const gLayout = loadFromStorage('gLayout')
   return gLayout
@@ -16,6 +17,8 @@ function changeLayout(selector) {
   saveToStorage('gLayout', selector)
 }
 // פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויוץ
+// CREATE // CRUDL (CREAE, READ, UPDATE,DELETE)
+
 function getBooks(options) {
   var books = _FilterBy(options.filterBy)
   if (options.sortBy !== undefined) books = SortByStr(books, options.sortBy.value)
@@ -25,151 +28,19 @@ function getBooks(options) {
   }
   return books
 }
-
 function getLastPage(options) {
   const length = _FilterBy(options.filterBy).length
   const numOfPages = Math.ceil(length / options.page.size)
   return numOfPages
 }
-
-// function nextPage() {
-//   gQueryOptions.page.idx++
-//   const numOfPages = gQueryOptions.page.size /
-//     // if (gQueryOptions.page.idx <=  ) {
-//     //   console.log('variable', variable);
-
-//     // }
-//     render()
-// }
-// function previousPage() {
-//   gQueryOptions.page.idx--
-//   render()
-// }
-
-function _FilterBy(filterBy) { //
-  const filterByTxt = filterBy.txt
-  const filterByRating = filterBy.rating
-  var books = gBooks.slice() 
-  if (filterByTxt) {
-    const regex = new RegExp(filterByTxt, 'i')
-    books = books.filter(book => regex.test(book.title))
-  }
-  if (filterByRating > 0) books = books.filter(book => book.rating >= filterByRating)
-
-
-  return books
-}
-
-
-// function sortUpAndDown(el) {
-//   const options = getGQuery()
-//   const sortUp = new RegExp('up', 'i')
-//   const sortDown = new RegExp('down', 'i')
-//   const sortByValue = el.name
-//   options.sortBy.value = sortByValue
-//   // el.value
-//   if (sortUp.test(el.value)) gBooks.sort((book1, book2) => {
-//     return  book1.sortByValue - book2.sortByValue
-//   })
-
-//   if (sortDown.test(el.value)) gBooks.sort((book1, book2) => {
-//     return book2.sortByValue - book1.sortByValue
-//   })
-//   // render()
-//   // return gBooks
-//   console.log("🚀 ~ sortUpAndDown ~ gBooks:", gBooks)
-// }
-
-
-function SortByStr(books, value) {
-  const Cheap = new RegExp('Cheap', 'i')
-  const Expensive = new RegExp('Expensive', 'i')
-  const titleUp = new RegExp('title-up', 'i')
-  const titleDown = new RegExp('title-down', 'i')
-  const priceUp = new RegExp('price-up', 'i')
-  const priceDown = new RegExp('price-down', 'i')
-  const ratingUp = new RegExp('rating-up', 'i')
-  const ratingDown = new RegExp('rating-down', 'i')
-
-
-  if (Cheap.test(value)) books.sort((book1, book2) => {
-    return book2.price - book1.price
-  })
-  if (Expensive.test(value)) books.sort((book1, book2) => {
-    return book1.price - book2.price
-  })
-  if (titleUp.test(value)) books.sort((book1, book2) => {
-    return book2.title.localeCompare(book1.title)
-  })
-  if (titleDown.test(value)) books.sort((book1, book2) => {
-    return book1.title.localeCompare(book2.title)
-  })
-  if (ratingUp.test(value)) books.sort((book1, book2) => {
-    return book2.rating - book1.rating
-  })
-  if (ratingDown.test(value)) books.sort((book1, book2) => {
-    return book1.rating - book2.rating
-  })
-
-
-  return books
-}
-
-function setFilter(val) {
-  gQueryOptions.filterBy.txt = val
-}
-
-function clearRating() {
-  gQueryOptions.filterBy.rating = 0
-}
-
-function clearSorting() {
-  gQueryOptions.sortBy = {}
-}
-
 function getNoImgUrl() {
   return NO_IMG_URL
 }
-
 function getBookById(bookId) {
   var book = gBooks.find(book => { return book.id === bookId })
   return book
 }
-
-function removeBook(bookId) {
-  var bookToRemove = gBooks.find(book => book.id === bookId)
-  gBooks.splice(bookToRemove, 1)
-  _saveBook()
-
-}
-
-function updateRating(bookId, rating) {
-  var bookIdx = gBooks.findIndex(book => book.id === bookId)
-  gBooks[bookIdx].rating = rating
-  _saveBook()
-}
-
-
-function updateBook(bookId, newTitle, newPrice, newUrl) {
-  var book = gBooks.find(book => book.id === bookId)
-  book.title = newTitle
-  book.price = newPrice
-  book.imgUrl = newUrl || NO_IMG_URL
-  onRenderSuccessMsg('update')
-  _saveBook()
-  return book
-}
-
-
-function addBook(newReadyBook) {
-  gBooks.unshift(newReadyBook)
-  _saveBook()
-  return newReadyBook
-}
-
-
-function getCurStats(booksArray) {
-  const books = booksArray
+function getCurStats(books) {
   var BookPrice = 0
   const Stats = books.reduce((acc, book) => {
     BookPrice += +book.price
@@ -184,6 +55,81 @@ function getCurStats(booksArray) {
 }
 
 
+// FILTER & SORTING
+function _FilterBy(filterBy) { //
+  const filterByTxt = filterBy.txt
+  const filterByRating = filterBy.rating
+  var books = gBooks.slice()
+  if (filterByTxt) {
+    const regex = new RegExp(filterByTxt, 'i')
+    books = books.filter(book => regex.test(book.title))
+  }
+  if (filterByRating > 0) books = books.filter(book => book.rating >= filterByRating)
+
+
+  return books
+}
+function setFilter(val) {
+  gQueryOptions.filterBy.txt = val
+}
+
+function SortByStr(books, value = "") { // Default empty string if undefined
+  const lowerValue = value.toLowerCase();
+
+  if (lowerValue.includes("cheap")) {
+    books.sort((a, b) => b.price - a.price);
+  } else if (lowerValue.includes("expensive")) {
+    books.sort((a, b) => a.price - b.price);
+  } else if (lowerValue.includes("title-up")) {
+    books.sort((a, b) => a.title.localeCompare(b.title)); // A → Z
+  } else if (lowerValue.includes("title-down")) {
+    books.sort((a, b) => b.title.localeCompare(a.title)); // Z → A
+  } else if (lowerValue.includes("rating-up")) {
+    books.sort((a, b) => b.rating - a.rating);
+  } else if (lowerValue.includes("rating-down")) {
+    books.sort((a, b) => a.rating - b.rating);
+  }
+
+  return books;
+}
+
+function clearRating() {
+  gQueryOptions.filterBy.rating = 0
+}
+
+function clearSorting() {
+  gQueryOptions.sortBy = {}
+}
+//UPDATE 
+function updateBook(bookId, newTitle, newPrice, newUrl) {
+  var book = gBooks.find(book => book.id === bookId)
+  book.title = newTitle
+  book.price = newPrice
+  book.imgUrl = newUrl || NO_IMG_URL
+  onRenderSuccessMsg('update')
+  _saveBook()
+  return book
+}
+function updateRating(bookId, rating) {
+  var bookIdx = gBooks.findIndex(book => book.id === bookId)
+  gBooks[bookIdx].rating = rating
+  _saveBook()
+}
+
+
+
+// ADD & REMOVE
+function removeBook(bookId) {
+  var bookToRemove = gBooks.find(book => book.id === bookId)
+  gBooks.splice(bookToRemove, 1)
+  _saveBook()
+
+}
+function addBook(newReadyBook) {
+  gBooks.unshift(newReadyBook)
+  _saveBook()
+  return newReadyBook
+}
 function createBook(title, price, url) {
   const book = {
     id: getId(),
@@ -195,8 +141,6 @@ function createBook(title, price, url) {
   }
   return book
 }
-
-
 function _createBooks(num) {
   var books = loadFromStorage('bookDB') // null
   if (!books || !books.length) {
@@ -215,7 +159,6 @@ function _createBooks(num) {
   saveToStorage(BOOK_KEY, books)
   return books
 }
-
 function _saveBook() {
   saveToStorage(BOOK_KEY, gBooks)
 }

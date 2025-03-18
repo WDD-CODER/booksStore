@@ -3,7 +3,7 @@
 const gQueryOptions = {
     filterBy: { txt: '', rating: 0 },
     sortBy: {},
-    page: {idx: 0, size: 5 },
+    page: { idx: 0, size: 5 },
     layOut: {}
 }
 
@@ -33,6 +33,19 @@ function onUserInput(event) {
     render()
 }
 
+
+
+//get updated list and renders it
+function render() {
+    const books = getBooks(gQueryOptions)
+    if (!books.length) {
+        renderNoticeNoFilter(books)
+        return
+    }
+    if (getGLayout() === 'card-layout') renderBookCards(books)
+    else renderBookTable(books)
+}
+// rendering functions
 function RenderStats(books) {
     const curStats = getCurStats(books)
     const elFooter = document.querySelector('footer')
@@ -49,20 +62,6 @@ function RenderStats(books) {
     spanBelow100.innerText = `Books Below $100 : ${curStats.lessThen100}`
 }
 
-
-//get updated list and renders it
-function render() {
-    console.log('render!');
-    
-    const books = getBooks(gQueryOptions)
-    if (!books.length) {
-        renderNoticeNoFilter(books)
-        return
-    }
-    if (getGLayout() === 'card-layout') renderBookCards(books)
-    else renderBookTable(books)
-}
-// rendering functions
 function renderBookTable(books) {
     onHideElement('.card-container')
     const elActionTh = document.querySelector('.action.sort')
@@ -238,8 +237,19 @@ function onSetLayout(el) {
     render()
 }
 
-function changeRadioBtn(value){
+function onChangeRadioBtn(value) {
     if (value === 'Expensive') {
+        document.querySelector('.sorting-low').checked = false
+    }
+    if (value === 'Cheap') {
+        document.querySelector('.sorting-high').checked = false
+    }
+}
+function onChangeSortingBtn(el) {
+    gQueryOptions.sortBy.value = el.name
+    const sortBy = gQueryOptions.sortBy.value
+    const value = el.name
+    if (value === 'price') {
         document.querySelector('.sorting-low').checked = false
     }
     if (value === 'Cheap') {
@@ -253,13 +263,14 @@ function changeRadioBtn(value){
 function onChangeSorting(el) {
     const value = el.value
     gQueryOptions.sortBy.value = value
-    changeRadioBtn(value)
+    // onChangeSortingBtn(el)
+    onChangeRadioBtn(value)
     SortByStr(gBooks, value)
     render()
     return
 }
-    
-    function onNextPage() {
+
+function onNextPage() {
     const lastPageIdx = getLastPage(gQueryOptions)
     gQueryOptions.page.idx++
 
@@ -305,6 +316,6 @@ function onHideElement(selector) {
 }
 
 
-function getGQuery(){
+function getGQuery() {
     return gQueryOptions
 }
