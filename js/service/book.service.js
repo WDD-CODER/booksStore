@@ -1,45 +1,34 @@
 'use strict';
 
 const BOOK_KEY = 'bookDB'
-const NO_IMG_URL = "img/noImg.jpg"
 
 var gBooks = loadFromStorage(BOOK_KEY) || _createBooks(10)
 var gStats = {}
 var gBookId = null
 
 
-function getGLayout() {
-  const gLayout = loadFromStorage('gLayout')
-  return gLayout
-}
 
-function changeLayout(selector) {
-  saveToStorage('gLayout', selector)
-}
-// פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויוץ
-// CREATE // CRUDL (CREAE, READ, UPDATE,DELETE)
+
+// CREATE 
 
 function getBooks(options) {
   var books = _FilterBy(options.filterBy)
-  if (options.sortBy !== undefined) books = SortByStr(books, options.sortBy.value)
-  if (options.page.idx !== undefined) {
-    const startIdx = options.page.idx * options.page.size
-    books = books.slice(startIdx, startIdx + options.page.size)
-  }
+  books = SortByStr(books, options.sortBy.sortField)
+  const startIdx = options.page.idx * options.page.size
+  books = books.slice(startIdx, startIdx + options.page.size)
+  // }
   return books
 }
-function getLastPage(options) {
+function getLastPageIdx(options) {
   const length = _FilterBy(options.filterBy).length
-  const numOfPages = Math.ceil(length / options.page.size)
+  const numOfPages = Math.ceil(length / options.page.size) - 1
   return numOfPages
-}
-function getNoImgUrl() {
-  return NO_IMG_URL
 }
 function getBookById(bookId) {
   var book = gBooks.find(book => { return book.id === bookId })
   return book
 }
+
 function getCurStats(books) {
   var BookPrice = 0
   const Stats = books.reduce((acc, book) => {
@@ -59,6 +48,7 @@ function getCurStats(books) {
 function _FilterBy(filterBy) { //
   const filterByTxt = filterBy.txt
   const filterByRating = filterBy.rating
+
   var books = gBooks.slice()
   if (filterByTxt) {
     const regex = new RegExp(filterByTxt, 'i')
@@ -69,27 +59,27 @@ function _FilterBy(filterBy) { //
 
   return books
 }
-function setFilter(val) {
-  gQueryOptions.filterBy.txt = val
-}
+// function setFilter(val) {
+//   gQueryOptions.filterBy.txt = val
+// }
 
-function SortByStr(books, value = "") { // Default empty string if undefined
-  const lowerValue = value.toLowerCase();
+function SortByStr(books, sortField) {
 
-  if (lowerValue.includes("cheap")) {
+  const lowerValue = sortField.toLowerCase();
+
+  if (lowerValue.includes('cheap')) {
     books.sort((a, b) => b.price - a.price);
-  } else if (lowerValue.includes("expensive")) {
+  } else if (lowerValue.includes('expensive')) {
     books.sort((a, b) => a.price - b.price);
-  } else if (lowerValue.includes("title-up")) {
+  } else if (lowerValue.includes('title-up')) {
     books.sort((a, b) => a.title.localeCompare(b.title)); // A → Z
-  } else if (lowerValue.includes("title-down")) {
+  } else if (lowerValue.includes('title-down')) {
     books.sort((a, b) => b.title.localeCompare(a.title)); // Z → A
-  } else if (lowerValue.includes("rating-up")) {
+  } else if (lowerValue.includes('rating-up')) {
     books.sort((a, b) => b.rating - a.rating);
-  } else if (lowerValue.includes("rating-down")) {
+  } else if (lowerValue.includes('rating-down')) {
     books.sort((a, b) => a.rating - b.rating);
   }
-
   return books;
 }
 
@@ -98,8 +88,10 @@ function clearRating() {
 }
 
 function clearSorting() {
-  gQueryOptions.sortBy = {}
+  gQueryOptions.sortBy.sortField = ''
+  gQueryOptions.sortBy.sortDir = 0
 }
+
 //UPDATE 
 function updateBook(bookId, newTitle, newPrice, newUrl) {
   var book = gBooks.find(book => book.id === bookId)
@@ -135,7 +127,7 @@ function createBook(title, price, url) {
     id: getId(),
     title,
     price,
-    imgUrl: url || NO_IMG_URL,
+    imgUrl: url || "img/default.jpg",
     description: makeLorem(),
     rating: getRandomInt(1, 5),
   }

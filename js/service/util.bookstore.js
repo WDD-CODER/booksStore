@@ -52,11 +52,30 @@ function getWord(isUpperCase) {
 function repeatRatingStars(num) {
     var stars = ''
     for (let i = 0; i < num; i++) {
-      stars += '⭐'
+        stars += '⭐'
     }
     return stars
-  }
-  
-  function getRandomInt(min, max) {
+}
+
+function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getSortFieldValue(el) {
+    const lowerValue = el.value.toLowerCase().toString()
+
+    if (lowerValue.includes('cheap')) {
+        return 'cheap'
+    } else if (lowerValue.includes('expensive')) {
+        return 'expensive'
+    } else if (lowerValue.includes('title-up')) {
+        return 'title-up'
+    } else if (lowerValue.includes('title-down')) {
+        return 'title-down'
+    } else if (lowerValue.includes('rating-up')) {
+        return 'rating-up'
+    } else if (lowerValue.includes('rating-down')) {
+        return 'rating-down'
+    }
+    return '';
 }

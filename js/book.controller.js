@@ -1,15 +1,15 @@
 'use strict';
 
+const LAYOUT_KEY = 'layoutDb'
 const gQueryOptions = {
-    filterBy: { txt: '', rating: 0 },
-    sortBy: {},
+    filterBy: { txt: '', rating: 0, },
+    sortBy: { sortField: '', sortDir: 0 },
     page: { idx: 0, size: 5 },
-    layOut: {}
+    layOut: {} // no need
 }
 
 
-// const LAYOUT_KEY = 'layoutDb'
-// var gLayout = loadFromstorage(LAYOUT_KEY) || 'table'
+var gLayout = loadFromStorage(LAYOUT_KEY) || 'table'
 
 function onInit() {
     render()
@@ -17,19 +17,20 @@ function onInit() {
 
 function onClearFilters() {
     const inputValue = document.querySelector('input').value = ''
-    const ratingValue = document.querySelector('.rating-field').value = ""
+    const ratingValue = document.querySelector('.rating-field').value = ''
     const radioBtnCheap = document.querySelector('.sorting-low').checked = false
     const radioBtnExpensive = document.querySelector('.sorting-high').checked = false
-    setFilter('')
+    const sortBtnS = document.querySelectorAll('.table-header button').forEach(book => book.style.color = 'black')
     clearRating()
     clearSorting()
     render()
 
 }
 
-function onUserInput(event) {
+function onSetFilter(event) {
     var value = event.target.value
-    setFilter(value)
+    gQueryOptions.filterBy.txt = value
+    gQueryOptions.page.idx = ''
     render()
 }
 
@@ -42,8 +43,10 @@ function render() {
         renderNoticeNoFilter(books)
         return
     }
-    if (getGLayout() === 'card-layout') renderBookCards(books)
+    if (gLayout === 'card') renderBookCards(books)
     else renderBookTable(books)
+    RenderStats(books)
+
 }
 // rendering functions
 function RenderStats(books) {
@@ -66,7 +69,6 @@ function renderBookTable(books) {
     onHideElement('.card-container')
     const elActionTh = document.querySelector('.action.sort')
     elActionTh.classList.remove('hidden')
-
     const elTbody = document.querySelector('tbody')
     var strHTMls = books.map(book => {
         return `<tr>
@@ -80,7 +82,7 @@ function renderBookTable(books) {
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
-    RenderStats(books)
+    // setQueryParams()
 }
 function renderBookCards(books) {
     const elCardContainer = document.querySelector('.card-container')
@@ -95,7 +97,7 @@ function renderBookCards(books) {
                               <p>${book.title}</p>
                               <p>$${book.price}</p>
                               <p>${repeatRatingStars(book.rating)}</p>
-                              <img src="${book.imgUrl}" onerror="this.src='img/noImg.jpg'" alt="bookImg">
+                              <img src="${book.imgUrl}" onerror="this.src='img/default.jpg'" alt="bookImg">
                                                             <section>
                               <button onclick="onUpdateBook('${book.id}')" class="update-button">update</button>
                               <button onclick="onRemoveBook('${book.id}')" class="delete-button">delete</button>   
@@ -103,8 +105,7 @@ function renderBookCards(books) {
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
-    RenderStats(books)
-
+    // setQueryParams()
 }
 function renderNoticeNoFilter(booksArray) {
     const elTbody = document.querySelector('tbody')
@@ -132,6 +133,8 @@ function onRenderDetailsModal(bookId) {
     document.querySelector('.show-rating').innerText = book.rating
     document.querySelector('.book-img').src = book.imgUrl
 
+    setQueryParams(bookId)
+
     modal.showModal()
 }
 
@@ -150,7 +153,7 @@ function onAddBook() {
         updateBook(gBookId, title.value, price.value, imgUrl.value)
     }
     else {
-        const newBook = createBook(title.value, price.value, imgUrl.value || getNoImgUrl())
+        const newBook = createBook(title.value, price.value, imgUrl.value)
         addBook(newBook)
     }
     gBookId = null
@@ -172,11 +175,6 @@ function onRemoveBook(bookId) {
 
 // פה אפשר ליצור משהו שעקב אחרי הקווריי ומשם מאפס את הקווארי ודואג לתת ערך דיפולטיבי ומעדכן את כל המקומות השונים בהתאם 
 function clearModal() {
-    // gQueryOptions = {
-    //     filterBy: { txt: '', rating: 0 },
-    //     sortBy: {},
-    //     page: { idx: 0, size: 5 }
-    // gQueryOptions.filterBy
     const modal = document.querySelector('.add-book.modal')
     const title = document.querySelector('[name="book-title"]').value = ''
     const price = document.querySelector('[name="book-price"]').value = ''
@@ -231,65 +229,135 @@ function onChangeRating(el) {
     gQueryOptions.filterBy.rating = minimumRating
     render()
 }
-function onSetLayout(el) {
-    const selector = el.classList[0]
-    changeLayout(selector)
+function onSetLayout(value) {
+    gLayout = value
+    console.log("🚀 ~ changeLayout ~ LAYOUT_KEY:", gLayout)
+    saveToStorage(LAYOUT_KEY, gLayout)
     render()
 }
 
-function onChangeRadioBtn(value) {
-    if (value === 'Expensive') {
+function onChangeRadioBtn(el) {
+    const direction = getSortFieldValue(el)
+    if (direction === 'up') {
         document.querySelector('.sorting-low').checked = false
     }
-    if (value === 'Cheap') {
+    if (direction === 'down') {
         document.querySelector('.sorting-high').checked = false
     }
 }
 function onChangeSortingBtn(el) {
-    gQueryOptions.sortBy.value = el.name
-    const sortBy = gQueryOptions.sortBy.value
-    const value = el.name
-    if (value === 'price') {
-        document.querySelector('.sorting-low').checked = false
-    }
-    if (value === 'Cheap') {
-        document.querySelector('.sorting-high').checked = false
-    }
+    const curElName = el.name.toLowerCase()
+    const curElValue = el.value.toLowerCase()
+    const sortBtnS = document.querySelectorAll('.table-header button').forEach(sortBtnS => {
+        if (sortBtnS.name.toLowerCase() === curElName && sortBtnS.value.toLowerCase() === curElValue) {
+            sortBtnS.style.color = 'yellow'
+        } else sortBtnS.style.color = 'black'
+    })
 }
+
 
 // PAGING
 
 // helpers
 function onChangeSorting(el) {
-    const value = el.value
-    gQueryOptions.sortBy.value = value
-    // onChangeSortingBtn(el)
-    onChangeRadioBtn(value)
-    SortByStr(gBooks, value)
+    const elValue = getSortFieldValue(el)
+    gQueryOptions.sortBy.sortField = elValue
+    onChangeSortingBtn(el)
+    onChangeRadioBtn(el)
+    SortByStr(gBooks, gQueryOptions.sortBy.sortField)
     render()
     return
 }
 
 function onNextPage() {
-    const lastPageIdx = getLastPage(gQueryOptions)
+    const lastPageIdx = getLastPageIdx(gQueryOptions)
     gQueryOptions.page.idx++
 
-    if (gQueryOptions.page.idx >= lastPageIdx) {
+    if (gQueryOptions.page.idx > lastPageIdx) {
         gQueryOptions.page.idx = 0
     }
     render()
 }
 function onPreviousPage() {
-    const lastPageIdx = getLastPage(gQueryOptions)
+    const lastPageIdx = getLastPageIdx(gQueryOptions)
     gQueryOptions.page.idx--
 
     if (gQueryOptions.page.idx < 0) {
-        gQueryOptions.page.idx = lastPageIdx - 1
+        gQueryOptions.page.idx = lastPageIdx
     }
     render()
 }
 
-// PARAMS
+
+// filterBy: { txt: '', rating: 0, },
+// sortBy: { value: '' },
+// page: { idx: 0, size: 5 },
+// layOut: {}
+
+PARAMS
+function setQueryParams(bookId = null) {
+    const queryParams = new URLSearchParams()
+
+    const { filterBy, sortBy, page } = gQueryOptions
+
+    if (bookId) queryParams.set('bookId', bookId)
+
+    queryParams.set('filterByTxt', filterBy.txt)
+    queryParams.set('filterByRating', filterBy.rating)
+
+    if (gQueryOptions.sortBy.value) queryParams.set('sortBy', sortBy)
+
+    if (gQueryOptions.page.idx !== undefined) {
+        queryParams.set('pageIdx', page.idx)
+    }
+
+    const newUrl =
+        window.location.protocol + "//" +
+        window.location.host +
+        window.location.host + '?' + queryParams.toString()
+
+    window.history.pushState({ path: newUrl }, '', newUrl)
+}
+
+function readQueryParams() {
+    const queryParams = new URLSearchParams(window.location.search)
+
+    const bookId = queryParams.get('bookId')
+    if (bookId) onRenderDetailsModal(bookId)
+
+    const filterByTxt = queryParams.get('title') || ''
+    const filterByRating = +queryParams.get('filterByRating') || 0
+
+    const filterBy = queryParams.filterBy
+    filterBy.txt = filterByTxt
+    filterBy.rating = filterByRating
+
+    if (queryParams.get('sortby')) {
+        const sortBy = queryParams.get('sortBy')
+        gQueryOptions.sortBy = sortBy
+    }
+
+    if (queryParams.get('pageIdx')) {
+        const page = +queryParams.get('pageIdx')
+        const maxPage = getLastPageIdx(gQueryOptions)
+        if (gQueryOptions.page.idx + diff < 0) return gQueryOptions.page.idx = maxPage
+        if (gQueryOptions.page.idx + diff > maxPage) return gQueryOptions.page.idx = 0
+        gQueryOptions.page.idx += diff
+    }
+
+    renderQueryParams()
+}
+
+function renderQueryParams() {
+    const { filterBy, sortBy, page } =gQueryOptions
+
+    document.querySelector('filter-btn input').value =  filterBy.txt 
+    document.querySelector('rating-field').value = filterBy.rating
+
+    if (sortBy.sortField) {
+        
+    }
+} 
 
 // HELPERS
 function onOpenBookModal() {
@@ -315,7 +383,3 @@ function onHideElement(selector) {
     element.classList.add("hidden")
 }
 
-
-function getGQuery() {
-    return gQueryOptions
-}

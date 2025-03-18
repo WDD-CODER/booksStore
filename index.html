@@ -12,12 +12,11 @@
     <h1>The Book Shope</h1>
     <div class="main-container">
         <div class="filter-btn">
-            <input oninput="onUserInput(event,this)" type="text" placeholder="movie title">
+            <input oninput="onSetFilter(event,this)" type="text" placeholder="movie title">
             <button onclick="onClearFilters()" class="clear">clear search</button>
-            <!-- <button onclick="onAddBook()" class="add-book">add</button> -->
             <button onclick="onOpenBookModal()" class="add-book">add book by modal</button>
-            <button onclick="onSetLayout(this)" class="card-layout">💳</button>
-            <button onclick="onSetLayout(this)" class="table">📑</button>
+            <button onclick="onSetLayout('card')" class="card-layout">💳</button>
+            <button onclick="onSetLayout('table')" class="table">📑</button>
             <div class="radio-btn">
                 <label><input onclick="onChangeSorting(this)" type="radio" class="sorting-high" value="Expensive">
                     Expensive</label>
@@ -69,7 +68,7 @@
                 <h1 class="book-title"></h1>
                 <h3 class="price"></h3>
                 <p class="book-pre"></p>
-                <img onerror="this.src='img/noImg.jpg'" class="book-img">
+                <img onerror="this.src='img/default.jpg'" class="book-img">
                 <div class="rating-div">
                     <button class="one-plus" onclick="onUpdateRating(event,this)">-</button>
                     <button class="show-rating" onclick="onUpdateRating(event,this)"></button>
@@ -97,7 +96,7 @@
                 <button class="submit">submit</button>
                 <button class="close" type="button" onclick="onCloseBookModal(event)">X</button>
             </form>
-            <img onerror="this.src='img/noImg.jpg'" class="book-img-update">
+            <img onerror="this.src='img/default.jpg'" class="book-img-update">
             <div class="rating-div">
                 <button type="button" class="one-plus " onclick="onUpdateRating(event,this)">-</button>
                 <button name="rating" type="button" class="show-rating " onclick="onUpdateRating(event,this)"></button>
