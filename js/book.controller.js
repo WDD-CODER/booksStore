@@ -3,13 +3,18 @@
 const gQueryOptions = {
     filterBy: { txt: '', rating: 0 },
     sortBy: {},
-    page: { idx: 0, size: 5 },
+    page: {idx: 0, size: 5 },
     layOut: {}
 }
+
+
+// const LAYOUT_KEY = 'layoutDb'
+// var gLayout = loadFromstorage(LAYOUT_KEY) || 'table'
 
 function onInit() {
     render()
 }
+
 function onClearFilters() {
     const inputValue = document.querySelector('input').value = ''
     const ratingValue = document.querySelector('.rating-field').value = ""
@@ -21,11 +26,13 @@ function onClearFilters() {
     render()
 
 }
+
 function onUserInput(event) {
     var value = event.target.value
     setFilter(value)
     render()
 }
+
 function RenderStats(books) {
     const curStats = getCurStats(books)
     const elFooter = document.querySelector('footer')
@@ -45,6 +52,8 @@ function RenderStats(books) {
 
 //get updated list and renders it
 function render() {
+    console.log('render!');
+    
     const books = getBooks(gQueryOptions)
     if (!books.length) {
         renderNoticeNoFilter(books)
@@ -56,6 +65,8 @@ function render() {
 // rendering functions
 function renderBookTable(books) {
     onHideElement('.card-container')
+    const elActionTh = document.querySelector('.action.sort')
+    elActionTh.classList.remove('hidden')
 
     const elTbody = document.querySelector('tbody')
     var strHTMls = books.map(book => {
@@ -74,6 +85,8 @@ function renderBookTable(books) {
 }
 function renderBookCards(books) {
     const elCardContainer = document.querySelector('.card-container')
+    const elActionTh = document.querySelector('.action.sort').classList.add('hidden')
+
     const elTbody = document.querySelector('tbody')
     elTbody.innerHTML = ''
     onShowElement('.card-container')
@@ -123,7 +136,7 @@ function onRenderDetailsModal(bookId) {
     modal.showModal()
 }
 
-
+// CRUDL (CREAE, READ, UPDATE,DELETE)
 function onAddBook() {
     const title = document.querySelector('[name="book-title"]')
     const price = document.querySelector('[name="book-price"]')
@@ -225,22 +238,28 @@ function onSetLayout(el) {
     render()
 }
 
-
-// helpers
-function onChangeRadioBtn(el) {
-    const value = el.value
-    gQueryOptions.sortBy.value = value
-
+function changeRadioBtn(value){
     if (value === 'Expensive') {
         document.querySelector('.sorting-low').checked = false
     }
     if (value === 'Cheap') {
         document.querySelector('.sorting-high').checked = false
     }
+}
+
+// PAGING
+
+// helpers
+function onChangeSorting(el) {
+    const value = el.value
+    gQueryOptions.sortBy.value = value
+    changeRadioBtn(value)
+    SortByStr(gBooks, value)
     render()
     return
 }
-function onNextPage() {
+    
+    function onNextPage() {
     const lastPageIdx = getLastPage(gQueryOptions)
     gQueryOptions.page.idx++
 
@@ -258,6 +277,10 @@ function onPreviousPage() {
     }
     render()
 }
+
+// PARAMS
+
+// HELPERS
 function onOpenBookModal() {
     clearModal()
     const modal = document.querySelector('.add-book.modal')
@@ -279,4 +302,9 @@ function onShowElement(selector) {
 function onHideElement(selector) {
     const element = document.querySelector(selector)
     element.classList.add("hidden")
+}
+
+
+function getGQuery(){
+    return gQueryOptions
 }

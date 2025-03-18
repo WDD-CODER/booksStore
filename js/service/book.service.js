@@ -8,17 +8,17 @@ var gStats = {}
 var gBookId = null
 
 function getGLayout() {
- const gLayout = loadFromStorage('gLayout')
+  const gLayout = loadFromStorage('gLayout')
   return gLayout
 }
 
 function changeLayout(selector) {
-  saveToStorage('gLayout',selector )
+  saveToStorage('gLayout', selector)
 }
 // פה אפשר פשוט לעשות את זה על יידי להביא את הקווארי מהקונטרול ואז פשוט לעשות פילטר על בווקס עד שנגמרו כל האפשרויוץ
 function getBooks(options) {
   var books = _FilterBy(options.filterBy)
-  if (options.sortBy !== undefined) books = SortBy(books, options.sortBy.value)
+  if (options.sortBy !== undefined) books = SortByStr(books, options.sortBy.value)
   if (options.page.idx !== undefined) {
     const startIdx = options.page.idx * options.page.size
     books = books.slice(startIdx, startIdx + options.page.size)
@@ -46,11 +46,10 @@ function getLastPage(options) {
 //   render()
 // }
 
-function _FilterBy(filterBy) {
+function _FilterBy(filterBy) { //
   const filterByTxt = filterBy.txt
   const filterByRating = filterBy.rating
-  var books = gBooks.slice()
-
+  var books = gBooks.slice() 
   if (filterByTxt) {
     const regex = new RegExp(filterByTxt, 'i')
     books = books.filter(book => regex.test(book.title))
@@ -62,14 +61,57 @@ function _FilterBy(filterBy) {
 }
 
 
+// function sortUpAndDown(el) {
+//   const options = getGQuery()
+//   const sortUp = new RegExp('up', 'i')
+//   const sortDown = new RegExp('down', 'i')
+//   const sortByValue = el.name
+//   options.sortBy.value = sortByValue
+//   // el.value
+//   if (sortUp.test(el.value)) gBooks.sort((book1, book2) => {
+//     return  book1.sortByValue - book2.sortByValue
+//   })
 
-function SortBy(books, sortBy) {
-  if (sortBy === 'Cheap') books.sort((book1, book2) => {
-    return book1.price - book2.price
-  })
-  if (sortBy === 'Expensive') books.sort((book1, book2) => {
+//   if (sortDown.test(el.value)) gBooks.sort((book1, book2) => {
+//     return book2.sortByValue - book1.sortByValue
+//   })
+//   // render()
+//   // return gBooks
+//   console.log("🚀 ~ sortUpAndDown ~ gBooks:", gBooks)
+// }
+
+
+function SortByStr(books, value) {
+  const Cheap = new RegExp('Cheap', 'i')
+  const Expensive = new RegExp('Expensive', 'i')
+  const titleUp = new RegExp('title-up', 'i')
+  const titleDown = new RegExp('title-down', 'i')
+  const priceUp = new RegExp('price-up', 'i')
+  const priceDown = new RegExp('price-down', 'i')
+  const ratingUp = new RegExp('rating-up', 'i')
+  const ratingDown = new RegExp('rating-down', 'i')
+
+
+  if (Cheap.test(value)) books.sort((book1, book2) => {
     return book2.price - book1.price
   })
+  if (Expensive.test(value)) books.sort((book1, book2) => {
+    return book1.price - book2.price
+  })
+  if (titleUp.test(value)) books.sort((book1, book2) => {
+    return book2.title.localeCompare(book1.title)
+  })
+  if (titleDown.test(value)) books.sort((book1, book2) => {
+    return book1.title.localeCompare(book2.title)
+  })
+  if (ratingUp.test(value)) books.sort((book1, book2) => {
+    return book2.rating - book1.rating
+  })
+  if (ratingDown.test(value)) books.sort((book1, book2) => {
+    return book1.rating - book2.rating
+  })
+
+
   return books
 }
 
