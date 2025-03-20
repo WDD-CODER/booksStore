@@ -3,7 +3,7 @@
 const LAYOUT_KEY = 'layoutDb'
 const gQueryOptions = {
     filterBy: { txt: '', rating: 0, },
-    sortBy: { sortField: '', sortDir: 0 },
+    sortBy: { sortField: '' },
     page: { idx: 0, size: 5 },
     layOut: {} // no need
 }
@@ -12,6 +12,7 @@ const gQueryOptions = {
 var gLayout = loadFromStorage(LAYOUT_KEY) || 'table'
 
 function onInit() {
+    readQueryParams()
     render()
 }
 
@@ -82,7 +83,7 @@ function renderBookTable(books) {
                               </td></tr>`
     })
     elTbody.innerHTML = strHTMls.join("")
-    // setQueryParams()
+    setQueryParams()
 }
 function renderBookCards(books) {
     const elCardContainer = document.querySelector('.card-container')
@@ -105,7 +106,7 @@ function renderBookCards(books) {
                               </section></div>`
     })
     elCardContainer.innerHTML = strHTMls.join("")
-    // setQueryParams()
+    setQueryParams()
 }
 function renderNoticeNoFilter(booksArray) {
     const elTbody = document.querySelector('tbody')
@@ -124,7 +125,7 @@ function onRenderSuccessMsg(newMsg) {
     }, 2000);
 }
 function onRenderDetailsModal(bookId) {
-    gBookId = bookId
+    setGBookId(bookId)
     const book = getBookById(bookId)
     const modal = document.querySelector('.modal')
     document.querySelector('.book-title').innerText = book.title
@@ -170,8 +171,6 @@ function onRemoveBook(bookId) {
     render()
     onRenderSuccessMsg('remove')
 }
-// 
-
 
 // פה אפשר ליצור משהו שעקב אחרי הקווריי ומשם מאפס את הקווארי ודואג לתת ערך דיפולטיבי ומעדכן את כל המקומות השונים בהתאם 
 function clearModal() {
@@ -184,19 +183,14 @@ function clearModal() {
 
 
 //update
-function onUpdateBook(bookId, newTitle, newPrice, newUrl) {
-    gBookId = bookId;
+function onUpdateBook(bookId) {
+    setGBookId(bookId)
     var book = getBookById(bookId);
     const modal = document.querySelector('.add-book.modal');
-    const title = document.querySelector('[name="book-title"]');
-    const price = document.querySelector('[name="book-price"]');
-    const imgUrl = document.querySelector('[name="book-img"]');
-    const rating = document.querySelector('[name="rating"]');
-
-    rating.innerText = book.rating;
-    title.value = book.title;
-    price.value = book.price;
-    imgUrl.value = book.imgUrl;
+    document.querySelector('[name="book-title"]').value = book.title;
+    document.querySelector('[name="book-price"]').value = book.price;
+    document.querySelector('[name="book-img"]').value = book.imgUrl;
+    document.querySelector('.add-book.modal .show-rating').innerText = book.rating
     document.querySelector('.book-img-update').src = book.imgUrl;
 
     modal.showModal();
@@ -219,14 +213,17 @@ function onUpdateRating(event, el) {
         if (curBook.rating >= 5) return
         else curBook.rating++
     }
+
     updateRating(curBook.id, curBook.rating)
-    var ratingBtns = document.querySelectorAll('button.show-rating').forEach((el) => el.innerText = curBook.rating)
+    document.querySelectorAll('button.show-rating').forEach((el) => el.innerText = curBook.rating)
+    setQueryParams()
     render()
     return curBook
 }
 function onChangeRating(el) {
     const minimumRating = el.value.length
     gQueryOptions.filterBy.rating = minimumRating
+    setQueryParams()
     render()
 }
 function onSetLayout(value) {
@@ -238,13 +235,15 @@ function onSetLayout(value) {
 
 function onChangeRadioBtn(el) {
     const direction = getSortFieldValue(el)
-    if (direction === 'up') {
+    if (direction === 'expensive') {
         document.querySelector('.sorting-low').checked = false
     }
-    if (direction === 'down') {
+    if (direction === 'cheap') {
         document.querySelector('.sorting-high').checked = false
     }
+    setQueryParams()
 }
+
 function onChangeSortingBtn(el) {
     const curElName = el.name.toLowerCase()
     const curElValue = el.value.toLowerCase()
@@ -253,6 +252,7 @@ function onChangeSortingBtn(el) {
             sortBtnS.style.color = 'yellow'
         } else sortBtnS.style.color = 'black'
     })
+    setQueryParams()
 }
 
 
@@ -265,6 +265,7 @@ function onChangeSorting(el) {
     onChangeSortingBtn(el)
     onChangeRadioBtn(el)
     SortByStr(gBooks, gQueryOptions.sortBy.sortField)
+    setQueryParams()
     render()
     return
 }
@@ -276,6 +277,7 @@ function onNextPage() {
     if (gQueryOptions.page.idx > lastPageIdx) {
         gQueryOptions.page.idx = 0
     }
+    setQueryParams()
     render()
 }
 function onPreviousPage() {
@@ -285,36 +287,34 @@ function onPreviousPage() {
     if (gQueryOptions.page.idx < 0) {
         gQueryOptions.page.idx = lastPageIdx
     }
+    setQueryParams()
     render()
 }
 
 
-// filterBy: { txt: '', rating: 0, },
-// sortBy: { value: '' },
-// page: { idx: 0, size: 5 },
-// layOut: {}
 
-PARAMS
-function setQueryParams(bookId = null) {
+// PARAMS
+//
+// אני צריך להבין כיצד אני מרנדר ושומר גם את הכפתורים (מי צהוב ומי לא) בכדי להציג
+function setQueryParams() {
     const queryParams = new URLSearchParams()
 
-    const { filterBy, sortBy, page } = gQueryOptions
+    queryParams.set('bookTitle', gQueryOptions.filterBy.txt)
+    queryParams.set('rating', gQueryOptions.filterBy.rating)
 
-    if (bookId) queryParams.set('bookId', bookId)
-
-    queryParams.set('filterByTxt', filterBy.txt)
-    queryParams.set('filterByRating', filterBy.rating)
-
-    if (gQueryOptions.sortBy.value) queryParams.set('sortBy', sortBy)
+    if (gQueryOptions.sortBy.sortField) {
+        queryParams.set('sortField', gQueryOptions.sortBy.sortField)
+    }
 
     if (gQueryOptions.page.idx !== undefined) {
-        queryParams.set('pageIdx', page.idx)
+        queryParams.set('pageIdx', gQueryOptions.page.idx)
+        queryParams.set('pageSize', gQueryOptions.page.size)
     }
 
     const newUrl =
         window.location.protocol + "//" +
         window.location.host +
-        window.location.host + '?' + queryParams.toString()
+        window.location.pathname + '?' + queryParams.toString()
 
     window.history.pushState({ path: newUrl }, '', newUrl)
 }
@@ -322,42 +322,35 @@ function setQueryParams(bookId = null) {
 function readQueryParams() {
     const queryParams = new URLSearchParams(window.location.search)
 
-    const bookId = queryParams.get('bookId')
-    if (bookId) onRenderDetailsModal(bookId)
-
-    const filterByTxt = queryParams.get('title') || ''
-    const filterByRating = +queryParams.get('filterByRating') || 0
-
-    const filterBy = queryParams.filterBy
-    filterBy.txt = filterByTxt
-    filterBy.rating = filterByRating
-
-    if (queryParams.get('sortby')) {
-        const sortBy = queryParams.get('sortBy')
-        gQueryOptions.sortBy = sortBy
+    gQueryOptions.filterBy = {
+        txt: queryParams.get('bookTitle') || '',
+        rating: queryParams.get('rating') || 0
+    }
+    if (queryParams.get('sortField')) {
+        const sortField = queryParams.get('sortField')
+        gQueryOptions.sortBy.sortField = sortField
     }
 
     if (queryParams.get('pageIdx')) {
-        const page = +queryParams.get('pageIdx')
-        const maxPage = getLastPageIdx(gQueryOptions)
-        if (gQueryOptions.page.idx + diff < 0) return gQueryOptions.page.idx = maxPage
-        if (gQueryOptions.page.idx + diff > maxPage) return gQueryOptions.page.idx = 0
-        gQueryOptions.page.idx += diff
-    }
+        const pageIdx = +queryParams.get('pageIdx')
+        const pageSize = +queryParams.get('pageSize')
 
+        gQueryOptions.page.idx = +pageIdx || 0
+        gQueryOptions.page.size = +pageSize || gQueryOptions.page.size
+    }
     renderQueryParams()
 }
 
 function renderQueryParams() {
-    const { filterBy, sortBy, page } =gQueryOptions
+    document.querySelector('.filter-btn input').value = gQueryOptions.filterBy.txt
+    document.querySelector('.rating-field').value = repeatRatingStars(gQueryOptions.filterBy.rating)
 
-    document.querySelector('filter-btn input').value =  filterBy.txt 
-    document.querySelector('rating-field').value = filterBy.rating
+    const sortField = gQueryOptions.sortBy.sortField
 
-    if (sortBy.sortField) {
-        
-    }
-} 
+
+
+}
+
 
 // HELPERS
 function onOpenBookModal() {

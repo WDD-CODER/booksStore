@@ -43,6 +43,16 @@ function getCurStats(books) {
   return Stats
 }
 
+function getGBookId() {
+return gBookId
+}
+
+function setGBookId(bookId) {
+  gBookId = bookId
+return gBookId
+}
+
+
 
 // FILTER & SORTING
 function _FilterBy(filterBy) { //
@@ -89,7 +99,7 @@ function clearRating() {
 
 function clearSorting() {
   gQueryOptions.sortBy.sortField = ''
-  gQueryOptions.sortBy.sortDir = 0
+  // gQueryOptions.sortBy.sortDir = 0
 }
 
 //UPDATE 
