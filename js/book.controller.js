@@ -3,7 +3,7 @@
 const LAYOUT_KEY = 'layoutDb'
 const gQueryOptions = {
     filterBy: { txt: '', rating: 0, },
-    sortBy: { sortField: '' },
+    sortBy: { sortField: ''},
     page: { idx: 0, size: 5 },
     layOut: {} // no need
 }
@@ -304,6 +304,7 @@ function setQueryParams() {
 
     if (gQueryOptions.sortBy.sortField) {
         queryParams.set('sortField', gQueryOptions.sortBy.sortField)
+
     }
 
     if (gQueryOptions.page.idx !== undefined) {
@@ -342,10 +343,21 @@ function readQueryParams() {
 }
 
 function renderQueryParams() {
-    document.querySelector('.filter-btn input').value = gQueryOptions.filterBy.txt
-    document.querySelector('.rating-field').value = repeatRatingStars(gQueryOptions.filterBy.rating)
+    const { filterBy, sortBy, page } = gQueryOptions
+    console.log("🚀 ~ renderQueryParams ~ filterBy:", filterBy)
+    console.log("🚀 ~ renderQueryParams ~ page:", page)
+    console.log("🚀 ~ renderQueryParams ~ sortBy:", sortBy)
 
-    const sortField = gQueryOptions.sortBy.sortField
+    document.querySelector('.filter-btn input').value = filterBy.txt
+    document.querySelector('.rating-field').value = repeatRatingStars(filterBy.rating)
+
+
+
+
+    if (sortBy.sortField) {
+        UpdateSortButtonHighlight(sortBy.sortField)
+    }
+
 
 
 
@@ -353,6 +365,15 @@ function renderQueryParams() {
 
 
 // HELPERS
+// onRenderQuery(val)
+
+function UpdateSortButtonHighlight(val) {
+    // Convert "title-up" into ".title.up"
+    const formattedSelector = '.' + val.split('-').join('.');
+    const res = document.querySelector(formattedSelector);
+    res.style.color = 'yellow';
+  }
+  
 function onOpenBookModal() {
     clearModal()
     const modal = document.querySelector('.add-book.modal')
